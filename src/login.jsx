@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import studySpotLogo from './assets/study-spotter.svg'
+import studySpotLogo from './assets/study-spotter.jpg'
 import './login.css'
 
 function Login() {
