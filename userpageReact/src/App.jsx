@@ -2,21 +2,56 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-import uploadImages from "./setImage";
+
 
 function App() {
+  const [userInput, setUserInput]=useState('');
+  const[selectedImage, setSelectedImage]=useState(null);
+  const [imageURL, setImageURL] = useState(null);
+  const [error, setError] = useState('');
+
+  const handleInputChange= (Event)=> {
+    setUserInput(Event.target.value);
+  };
+  const handleImageChange = (Event)=> {
+    const file = Event.target.files[0];
+    if (file) {
+      const fileExtension = file.name.split('.').pop().toLowerCase();
+      if (['jpg', 'jpeg', 'png'].includes(fileExtension)) {
+        setSelectedImage(file);
+        setImageURL(URL.createObjectURL(file));
+        setError('');
+      } else {
+        setSelectedImage(null);
+        setImageURL(null);
+        setError('Invalid file type. Please upload an image file (.jpg, .jpeg, .png).');
+      }
+    }
+  };
+
+  const handleUpload = () => {
+    console.log("User Input:", userInput);
+    console.log("Selected Image:", selectedImage);
+    
+
+
+  };
+
  
   return (
     <>
       <div>
         <h1> Upload Page</h1>
         <h2>Add Image:</h2>
-        <uploadImages></uploadImages>
+        
+        <input type="file" accept=".jpg,.jpeg,.png" onChange={handleImageChange} />
+        {error && <p className="error-message">{error}</p>}
         <div className="input-container">
           <label htmlFor="userInput">Enter your text: </label>
-          <input id="userInput" type="text"></input>
+          <input id="userInput" type="text" value={userInput} onChange={handleInputChange}></input>
         </div>
-        <button className="uploadButton"> Upload</button>
+        <button className="uploadButton" onClick={handleUpload}> Upload</button>
+        
       </div>
 
     </>
