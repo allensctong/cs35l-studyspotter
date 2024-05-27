@@ -3,28 +3,60 @@ package main
 import (
 //	"fmt"
 	"net/http"
-	"github.com/rs/cors"
+
+	"github.com/gin-gonic/gin"
+	"github.com/gin-contrib/cors"
+	"studyspotter/src"
 )
 
-type userHandler struct{}
+type user struct {
+	ID string `json:"id"`
+	Password string `json:"password"`
+}
 
-func (userHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-//	fmt.Fprintf(w, "Hello world\nMethod type:%s\n", r.Method)
-	w.Header().Set("Content-Type", "application/json")
-	if r.Method == "GET" {
-		w.Write([]byte("{\"GET\": \"hello world\"}\n"))
-	} else if r.Method == "POST" {
-		w.Write([]byte("{\"POST\": \"hello world\"}\n"))
+var users = []user{
+	{ID: "RS", Password: "123"},
+	{ID: "SR", Password: "456"},
+}
+
+func GetUsers(c *gin.Context) {
+	c.IndentedJSON(http.StatusOK, users)	
+}
+
+func GetUser(c *gin.Context) {
+	id := c.Param("id")
+
+	for _, u := range users {
+		if u.ID == id {
+			c.IndentedJSON(http.StatusOK, u)
+			return
+		}
 	}
+	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "user not found"})	
+}
+
+func CreateUser(c *gin.Context) {
+	var newUser user
+
+	if err := c.BindJSON(&newUser); err != nil {
+        	return
+    	}
+
+	users = append(users, newUser)
+	c.IndentedJSON(http.StatusCreated, newUser)
 }
 
 func main() {
-	mux := http.NewServeMux()
-	mux.Handle("/api/user", userHandler{})
-	mux.HandleFunc("/api", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		w.Write([]byte("{\"hello\": \"world\"}\n"))
-	})
-	handler := cors.Default().Handler(mux)
-	http.ListenAndServe(":8080", handler)
+	// Set up database.
+	// src.DbInit("studyspotter.db")
+
+	// Set up router.
+	router := gin.Default()
+	router.Use(cors.New(cors.Config{
+		AllowOrigins: []string{"http://localhost:5173"},
+	}))
+	router.GET("api/user", GetUsers)
+	router.GET("api/user/:id", GetUser)
+	router.POST("api/user", CreateUser)
+	router.Run("localhost:8080")
 }

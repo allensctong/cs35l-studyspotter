@@ -1,4 +1,4 @@
-package main
+package src
 
 import (
 	"fmt"
@@ -13,7 +13,12 @@ func DbInit(dbName string) {
 	}
 	defer db.Close()
 
-	if _, err := db.Exec("create table users(UID INT, Username VARCHAR(255), Password VARCHAR(255));");
+	if _, err := db.Exec(`
+		drop table if exists users; 
+		create table users(
+			id VARCHAR(255), 
+			password VARCHAR(255)
+		);`);
 	err != nil {
 		panic(err)
 	}
