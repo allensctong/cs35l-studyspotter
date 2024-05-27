@@ -1,9 +1,11 @@
 package main
 
 import (
-//	"fmt"
+	"fmt"
 	"net/http"
+	"database/sql"
 
+	_ "modernc.org/sqlite"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/cors"
 	"studyspotter/src"
@@ -35,20 +37,34 @@ func GetUser(c *gin.Context) {
 	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "user not found"})	
 }
 
-func CreateUser(c *gin.Context) {
-	var newUser user
+func CreateUserWrapper(db *sql.DB) gin.HandlerFunc {
+	 CreateUser := func (c *gin.Context) {
+		var newUser user
 
-	if err := c.BindJSON(&newUser); err != nil {
-        	return
-    	}
+		if err := c.BindJSON(&newUser); err != nil {
+			return
+		}
 
-	users = append(users, newUser)
-	c.IndentedJSON(http.StatusCreated, newUser)
+		users = append(users, newUser)
+		db.Exec(fmt.Sprintf(`INSERT INTO user (id, password) 
+			VALUES ("%s", "%s");`, newUser.ID, newUser.Password))
+		fmt.Printf(fmt.Sprintf("INSERT INTO user (id, password)\nVALUES (%s, %s);\n", newUser.ID, newUser.Password))
+		c.IndentedJSON(http.StatusCreated, newUser)
+	}
+
+	return CreateUser
 }
 
 func main() {
 	// Set up database.
-	// src.DbInit("studyspotter.db")
+	dbName := "studyspotter.db"
+	db, err := sql.Open("sqlite", dbName)
+	if err != nil {
+		fmt.Printf("Unable to use data source: %s", err)
+	}
+	defer db.Close()
+
+	src.DbInit(db)
 
 	// Set up router.
 	router := gin.Default()
@@ -57,6 +73,6 @@ func main() {
 	}))
 	router.GET("api/user", GetUsers)
 	router.GET("api/user/:id", GetUser)
-	router.POST("api/user", CreateUser)
+	router.POST("api/user", CreateUserWrapper(db))
 	router.Run("localhost:8080")
 }

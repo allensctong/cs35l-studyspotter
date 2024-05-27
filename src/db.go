@@ -1,21 +1,13 @@
 package src
 
 import (
-	"fmt"
 	"database/sql"
-	_ "modernc.org/sqlite"
 )
 
-func DbInit(dbName string) {
-	db, err := sql.Open("sqlite", dbName)
-	if err != nil {
-		fmt.Printf("Unable to use data source: %s", err)
-	}
-	defer db.Close()
-
+func DbInit(db *sql.DB) {	
 	if _, err := db.Exec(`
-		drop table if exists users; 
-		create table users(
+		DROP TABLE IF EXISTS user; 
+		CREATE TABLE user(
 			id VARCHAR(255), 
 			password VARCHAR(255)
 		);`);
@@ -24,6 +16,3 @@ func DbInit(dbName string) {
 	}
 }
 
-/*func main() {
-	DbInit("studyspotter.db")
-}*/
