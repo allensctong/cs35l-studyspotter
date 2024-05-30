@@ -31,15 +31,19 @@ body {
     width: 100px; /* Adjust size as needed */
 }
 
+.content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding-bottom: 70px; /* padding bottom for fixed menu bar */
+}
+
 .post {
-    width:42%;
-    display:inline-block;
-    height: auto;
+    width: 40%;
     background-color: #ffffff;
     color: #333;
     border: none;
-    margin: 0 10px;
-    margin-bottom: 20px;
+    margin: 10px;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
@@ -113,7 +117,6 @@ body {
     color: #e0e0e0; /* Light grey on hover for a subtle effect */
 }
 
-
 .menu-bar .left,
 .menu-bar .right {
     display: flex;
@@ -124,12 +127,12 @@ body {
     margin-right: 5px;
 }
 
-.content {
-    padding-bottom: 70px; /* padding bottom for fixed menu bar */
-}
-
 /* Media queries for responsive adjustments */
 @media (max-width: 768px) {
+    .post {
+        width: 90%;
+    }
+
     .buttons button {
         flex: 1;
         margin: 0 2px;
