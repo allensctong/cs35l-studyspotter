@@ -101,3 +101,11 @@ button {
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
+.hideButton {
+    display: none;
+}
+
+#friend-button {
+    display: none;
+}
