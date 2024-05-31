@@ -9,6 +9,8 @@ function App() {
   const[selectedImage, setSelectedImage]=useState(null);
   const [imageURL, setImageURL] = useState(null);
   const [error, setError] = useState('');
+  const [profilePicture, setProfileImage]=useState(null);
+
 
   const handleInputChange= (Event)=> {
     setUserInput(Event.target.value);
@@ -30,12 +32,26 @@ function App() {
   };
 
   const handleUpload = () => {
+    if(selectedImage==null){
+      setError("Please upload an image before submitting.");
+    }
     console.log("User Input:", userInput);
     console.log("Selected Image:", selectedImage);
+ 
+    
     
 
 
   };
+  const handleProfile=()=>{
+    if(selectedImage==null){
+      setError("Please upload an image before submitting.");
+    }
+    setProfileImage(selectedImage);
+    console.log("Profile Picture:", profilePicture);
+  };
+ 
+ 
 
  
   return (
@@ -46,12 +62,13 @@ function App() {
         
         <input type="file" accept=".jpg,.jpeg,.png" onChange={handleImageChange} />
         {error && <p className="error-message">{error}</p>}
+        {imageURL && <img src={imageURL} alt="Selected" className="uploaded-image" />}
         <div className="input-container">
           <label htmlFor="userInput">Enter your text: </label>
           <input id="userInput" type="text" value={userInput} onChange={handleInputChange}></input>
         </div>
         <button className="uploadButton" onClick={handleUpload}> Upload</button>
-        
+        <button className="setProfileButton" onClick={handleProfile}> Set as Profile Picture</button>
       </div>
 
     </>

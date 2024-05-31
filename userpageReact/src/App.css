@@ -44,6 +44,9 @@
 .uploadButton {
   margin-top: 220px;
 }
+.setProfileButton{
+  margin-top: 220px;
+}
 
 .image-preview-container {
   display: flex;
@@ -53,10 +56,9 @@
 }
 
 .uploaded-image {
-  max-width: 200px;
-  max-height: 200px;
-  object-fit: cover;
-  border: 2px solid #ccc;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 100%;
+  height: auto;
+  margin-top:10px;
+
+
 }
