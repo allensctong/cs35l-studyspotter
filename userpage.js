@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import './styles.css';
 
-const ProfilePage = () => {
-    const [followerCount, setFollowerCount] = useState(0);
-    const [followingCount, setFollowingCount] = useState(0);
+// we can see what the backend db is storing, but we should pass the loggedIn user ids, profile id, etc. in here 
+const ProfilePage = ({ loggedInUserId, profileId, profileName, profileBio, initialFollowerCount, initialFollowingCount }) => {
+    const [followerCount, setFollowerCount] = useState(initialFollowerCount);
+    const [followingCount, setFollowingCount] = useState(initialFollowingCount);
     const [isFriend, setIsFriend] = useState(false);
-    const [isSelf, setIsSelf] = useState(false); // call setIsSelf when user logs in
+    const [isSelf, setIsSelf] = useState(loggedInUserId===profileId); // call setIsSelf when user logs in
 
     const handleAddFriend = () => {
         setIsFriend(!isFriend);
@@ -21,15 +22,17 @@ const ProfilePage = () => {
                 <div className="profile-header">
                     <div className="profile-picture"></div>
                     <div className="profile-info">
-                        <h1>Profile Name</h1>
-                        <p>Bio</p>
+                        <h1> {profileName} </h1>
+                        <p> {profileBio} </p>
                         <div className="counts">
                             <span id="follower-count">Followers: {followerCount}</span> |
                             <span id="following-count">Following: {followingCount}</span>
                         </div>
-                        <button id="friend-button" onClick={handleAddFriend}>
-                            {isFriend ? 'Unfriend' : 'Add Friend'}
-                        </button>
+                        {loggedInUserId !== profileId && (
+                            <button id="friend-button" onClick={handleAddFriend}>
+                                {isFriend ? 'Unfriend' : 'Add Friend'}
+                            </button>
+                        )}
                     </div>
                 </div>
                 <div className="gallery">
