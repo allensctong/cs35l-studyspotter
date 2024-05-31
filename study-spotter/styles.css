@@ -12,8 +12,15 @@ body {
     text-align: center;
 }
 
+.logo-link {
+    display: inline-block;
+    text-decoration: none;
+    cursor: pointer; 
+}
+
 .logo {
     height: 125px;
+    display: block;
 }
 
 .profile-container {
@@ -100,6 +107,7 @@ button {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    text-decoration: none;
 }
 
 .hideButton {
