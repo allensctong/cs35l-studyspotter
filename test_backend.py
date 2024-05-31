@@ -18,13 +18,14 @@ def get_users_by_id(ID):
     print(test_get.text)
 
 def create_user(ID, password):
-    new_user = {'id': ID, 'password': password}
+    new_user = {'username': ID, 'password': password}
     test_post = requests.post(
-        "http://localhost:8080/api/user", 
+        "http://localhost:8080/api/signup", 
         json=new_user, 
         headers={'Origin': ORIGIN}
     )
 
+create_user('RS', '1239120')
 create_user('RS', '1239120')
 get_users()
 get_users_by_id('RS')

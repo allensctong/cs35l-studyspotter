@@ -9,32 +9,31 @@ import (
 	_ "modernc.org/sqlite"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/cors"
-	"github.com/google/uuid"
-//	"studyspotter/src"
+	"studyspotter/src"
 )
 
 type User struct {
-	ID string `json:"id"`
+	Username string `json:"username"`
 	Password string `json:"password"`
 }
 
 func GetUsersWrapper(db *sql.DB) gin.HandlerFunc {
 	GetUsers := func (c *gin.Context) {
 		var users = []User{}
-		var id string
+		var username string
 		var password string
 
-		rows, err := db.Query("SELECT id, password FROM user")
+		rows, err := db.Query("SELECT username, password FROM user")
 		if err != nil {
 			log.Fatal(err)
 		}
 		defer rows.Close()
 
 		for rows.Next() {
-			if err := rows.Scan(&id, &password); err != nil {
+			if err := rows.Scan(&username, &password); err != nil {
 				log.Fatal(err)
 			}
-			users = append(users, User{id, password})
+			users = append(users, User{username, password})
 		}
 
 		if err := rows.Err(); err != nil {
@@ -47,10 +46,10 @@ func GetUsersWrapper(db *sql.DB) gin.HandlerFunc {
 
 func GetUserWrapper(db *sql.DB) gin.HandlerFunc {
 	GetUser := func (c *gin.Context) {
-		id := c.Param("id")
+		username := c.Param("username")
 		var password string
 
-		err := db.QueryRow("SELECT id, password FROM user WHERE id=?", id).Scan(&id, &password)
+		err := db.QueryRow("SELECT username, password FROM user WHERE username=?", username).Scan(&username, &password)
 		
 		if err == sql.ErrNoRows {
 			c.IndentedJSON(http.StatusNotFound, gin.H{"message": "user not found"})
@@ -59,7 +58,7 @@ func GetUserWrapper(db *sql.DB) gin.HandlerFunc {
 		if err != nil {
 			panic(err)
 		}
-		c.IndentedJSON(http.StatusOK, User{id, password})
+		c.IndentedJSON(http.StatusOK, User{username, password})
 	}
 
 	return GetUser
@@ -67,18 +66,34 @@ func GetUserWrapper(db *sql.DB) gin.HandlerFunc {
 
 func CreateUserWrapper(db *sql.DB) gin.HandlerFunc {
 	 CreateUser := func (c *gin.Context) {
-		var newUser User
+		//get username and password from request
+		var user User
+		if err := c.BindJSON(&user); err != nil {
+			panic(err)
+		}
+		username := user.Username
+		password := user.Password
+		//query database for user
+		err := db.QueryRow("SELECT username FROM user WHERE username=?", username).Scan(&username)
+		//if user already exists
+		if err != sql.ErrNoRows {
+			if err != nil {
+				panic(err)
+			}
 
-		if err := c.BindJSON(&newUser); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"message": "user already exists!"})
 			return
 		}
+		//validate username and password length
 
-		err := db.QueryRow("SELECT id, password FROM user WHERE id=?", newUser.ID)
+		//hash password
 
-		db.Exec(fmt.Sprintf(`INSERT INTO user (id, password) 
-			VALUES ("%s", "%s");`, newUser.ID, newUser.Password))
-		c.IndentedJSON(http.StatusCreated, newUser)
-	}
+		//create new user
+		db.Exec("INSERT INTO user (username, password) VALUES (?, ?);", username, password)
+		
+		//send response back to client
+		c.IndentedJSON(http.StatusCreated, User{username, password})
+}
 
 	return CreateUser
 }
@@ -93,7 +108,9 @@ func main() {
 	}
 	defer db.Close()
 
-	//src.DbInit(db)
+	src.DbInit(db)
+	token, _ := src.CreateToken("uwu")
+	fmt.Printf("%s\n", token)
 
 	// Set up router.
 	router := gin.Default()
@@ -101,7 +118,8 @@ func main() {
 		AllowOrigins: []string{"http://localhost:5173"},
 	}))
 	router.GET("api/user", GetUsersWrapper(db))
-	router.GET("api/user/:id", GetUserWrapper(db))
-	router.POST("api/user", CreateUserWrapper(db))
+	router.GET("api/user/:username", GetUserWrapper(db))
+	router.POST("api/signup", CreateUserWrapper(db))
 	router.Run("localhost:8080")
+
 }
