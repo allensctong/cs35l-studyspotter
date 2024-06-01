@@ -7,7 +7,9 @@ export default defineConfig({
 	build: {
 		rollUpOptions: {
 			input: {
-				login: 'login.html'
+				user: 'user.html',
+				login: 'login.html',
+				main: 'main.html'
 			}
 		}
 	}
