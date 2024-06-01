@@ -1,6 +1,7 @@
 package src
 
 import (
+//	"fmt"
 	"log"
 	"net/http"
 	"database/sql"
@@ -97,6 +98,7 @@ func LoginWrapper(db *sql.DB) gin.HandlerFunc {
 				if err != nil {
 					panic(err)
 				}
+				c.SetSameSite(http.SameSiteDefaultMode)
 				c.SetCookie("Authorization", tokenString, 3600 * 24, "", "", false, true)
 				c.JSON(http.StatusOK, gin.H{})
 				return
@@ -111,4 +113,21 @@ func LoginWrapper(db *sql.DB) gin.HandlerFunc {
 	}
 
 	return Login
+}
+
+func AuthRequired(c *gin.Context) {
+	tokenString, err := c.Cookie("Authorization")
+
+	if err == http.ErrNoCookie {
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{})
+		return
+	}
+
+	err = VerifyToken(tokenString)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{})
+		return
+	}
+
+	c.Next()
 }

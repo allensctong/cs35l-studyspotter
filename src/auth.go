@@ -4,15 +4,15 @@ import (
 	"fmt"
 	"os"
 	"time"
-	"crypto/rsa"
-	"crypto/x509"
-	"encoding/pem"
+//	"crypto/rsa"
+//	"crypto/x509"
+//	"encoding/pem"
 	"io/ioutil"
-	"log"
+//	"log"
 
 	"github.com/golang-jwt/jwt/v5"
 )
-//Load private key
+/*//Load private key
 var pwd, _ = os.Getwd()
 var privKeyLoc = pwd + "/jwtRS256.key"
 var pubKeyLoc = pwd + "/jwtRS256.key.pub"
@@ -46,11 +46,14 @@ func LoadPrivKey(rsaPrivateKeyLocation, rsaPublicKeyLocation string) (*rsa.Priva
 	privateKey.PublicKey = *pubKey
 
 	return privateKey, nil
-}
+}*/
+
+var pwd, _ = os.Getwd()
+var secretKey, _ = ioutil.ReadFile(pwd + "/jwtHS256.key")
 
 func CreateToken(username string) (string, error) {
 
-	token := jwt.NewWithClaims(jwt.SigningMethodRS256, 
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, 
 		jwt.MapClaims{
 			"username": username,
 			"exp": time.Now().Add(time.Hour * 24).Unix(),

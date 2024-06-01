@@ -29,8 +29,9 @@ func main() {
 	router.Use(cors.New(cors.Config{
 		AllowOrigins: []string{"http://localhost:5173"},
 	}))
-	router.GET("api/user", src.GetUsersWrapper(db))
-	router.GET("api/user/:username", src.GetUserWrapper(db))
+	authorized := router.Group("/", src.AuthRequired)
+	authorized.GET("api/user", src.GetUsersWrapper(db))
+	authorized.GET("api/user/:username", src.GetUserWrapper(db))
 	router.POST("api/signup", src.CreateUserWrapper(db))
 	router.POST("api/login", src.LoginWrapper(db))
 	router.Run("localhost:8080")

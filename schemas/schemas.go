@@ -1,11 +1,11 @@
 package schemas
 
 //POST/GET FOR SIGNUP/LOGIN
-type Login struct {
+type User struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 }
-
+/*
 //POST FROM UPLOAD
 type Upload struct {
 	Username
@@ -40,4 +40,4 @@ type User struct {
 	Followers int `json:"followers"`
 	ProfilePicture
 	Posts []Post
-}
+}*/
