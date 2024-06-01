@@ -1,0 +1,144 @@
+/* Reset and base styles */
+body, div, h1, h2, h3, p, button, img {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font: inherit;
+    vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+
+body {
+    line-height: 1.5;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    color: #ffffff;
+    background-color: #081D39; /* Dark blue as per the logo background */
+    padding: 20px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 20px;
+}
+
+.logo {
+    width: 100px; /* Adjust size as needed */
+}
+
+.content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding-bottom: 70px; /* padding bottom for fixed menu bar */
+}
+
+.post {
+    width: 40%;
+    background-color: #ffffff;
+    color: #333;
+    border: none;
+    margin: 10px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.post:hover {
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+.uploader {
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.post img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.buttons button {
+    background-color: #61C1BF; /* Teal as per the logo accent */
+    color: #ffffff;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 15px;
+    transition: background-color 0.3s, color 0.3s, transform 0.2s;
+}
+
+.buttons button:hover {
+    background-color: #138496; /* Darker teal */
+    transform: scale(1.1);
+}
+
+.caption {
+    padding-top: 10px;
+    font-size: 16px;
+}
+
+/* Menu bar with gradient */
+.menu-bar {
+    background: linear-gradient(to right, #081D39, #74DFD6); /* Gradient from light teal to darker teal */
+    border-top: 1px solid #ddd;
+    padding: 10px 0;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+    color: #fff; /* Ensuring text color is white for better readability */
+}
+
+.menu-bar button {
+    background: none;
+    color: inherit; /* Use the text color from the menu-bar for consistency */
+    cursor: pointer;
+    padding: 10px;
+    font-size: 16px;
+    transition: color 0.3s;
+}
+
+.menu-bar button:hover {
+    color: #e0e0e0; /* Light grey on hover for a subtle effect */
+}
+
+.menu-bar .left,
+.menu-bar .right {
+    display: flex;
+}
+
+.menu-bar .left button i,
+.menu-bar .right button i {
+    margin-right: 5px;
+}
+
+/* Media queries for responsive adjustments */
+@media (max-width: 768px) {
+    .post {
+        width: 90%;
+    }
+
+    .buttons button {
+        flex: 1;
+        margin: 0 2px;
+    }
+
+    .menu-bar {
+        justify-content: space-around;
+    }
+}
