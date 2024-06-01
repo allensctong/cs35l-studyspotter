@@ -39,7 +39,11 @@ const ProfilePage = ({ loggedInUserId, profileId, profileName, profileBio, initi
                     <div className="photo add-photo">
                         <a href="upload" class="add-button">+</a>
                     </div>
-                    
+                    <div class="photo"></div>
+                    <div class="photo"></div>
+                    <div class="photo"></div>
+                    <div class="photo"></div>
+                    <div class="photo"></div>
                 </div>
             </div>
         </div>

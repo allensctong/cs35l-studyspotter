@@ -7,8 +7,9 @@ body {
 
 .top-bar {
     width: 100%;
-    background-color: #001e3b;
+    height: 100%;
     padding: 5px 0;
+    background-color: #001e3b;
     text-align: center;
 }
 
