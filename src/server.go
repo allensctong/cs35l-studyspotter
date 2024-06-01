@@ -1,18 +1,19 @@
 package src
 
 import (
-//	"fmt"
+	"fmt"
 	"log"
 	"net/http"
 	"database/sql"
 
 	"studyspotter/schemas"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func GetUsersWrapper(db *sql.DB) gin.HandlerFunc {
 	GetUsers := func (c *gin.Context) {
-		var users = []schemas.User{}
+		var users = []schemas.Login{}
 		var username string
 		var password string
 
@@ -26,7 +27,7 @@ func GetUsersWrapper(db *sql.DB) gin.HandlerFunc {
 			if err := rows.Scan(&username, &password); err != nil {
 				log.Fatal(err)
 			}
-			users = append(users, schemas.User{username, password})
+			users = append(users, schemas.Login{username, password})
 		}
 
 		if err := rows.Err(); err != nil {
@@ -37,11 +38,14 @@ func GetUsersWrapper(db *sql.DB) gin.HandlerFunc {
 	return GetUsers
 }
 
+//Get User Profile (GET FOR USER PAGE)
 func GetUserWrapper(db *sql.DB) gin.HandlerFunc {
 	GetUser := func (c *gin.Context) {
+		var user schemas.UserProfile
 		username := c.Param("username")
 
-		if user, hasUser := DBHasUser(db, username); hasUser {
+		if hasUser := DBHasUser(db, username); hasUser {
+			user = DBGetUserProfile(db, username)
 			c.IndentedJSON(http.StatusOK, user)
 			return
 		}
@@ -53,27 +57,33 @@ func GetUserWrapper(db *sql.DB) gin.HandlerFunc {
 	return GetUser
 }
 
+//Create User Profile
 func CreateUserWrapper(db *sql.DB) gin.HandlerFunc {
 	 CreateUser := func (c *gin.Context) {
 		//get username and password from request
-		var user schemas.User
+		var user schemas.Login
 		if err := c.BindJSON(&user); err != nil {
 			panic(err)
 		}
 		username := user.Username
 		password := user.Password
 		//query database for user
-		if _, hasUser := DBHasUser(db, username); hasUser {
+		if hasUser := DBHasUser(db, username); hasUser {
 			//if user already exists
 			c.JSON(http.StatusBadRequest, gin.H{"message": "user already exists!"})
 			return
 		}
-		//validate username and password length
 
 		//hash password
+		hashBytes, err := bcrypt.GenerateFromPassword([]byte(password), 12)
+		if err != nil {
+			return
+		}
+
+		passwordHash := string(hashBytes)
 
 		//create new user
-		db.Exec("INSERT INTO user (username, password) VALUES (?, ?);", username, password)
+		db.Exec(`INSERT INTO user (username, password, following, followers, bio) VALUES (?, ?, 0, 0, "");`, username, passwordHash)
 		
 		//send response back to client
 		c.IndentedJSON(http.StatusCreated, gin.H{})
@@ -84,16 +94,17 @@ func CreateUserWrapper(db *sql.DB) gin.HandlerFunc {
 
 func LoginWrapper(db *sql.DB) gin.HandlerFunc {
 	Login := func (c *gin.Context) {
-		var incomingUser schemas.User
+		var incomingUser schemas.Login
 		if err := c.BindJSON(&incomingUser); err != nil {
 			panic(err)
 		}
 		username := incomingUser.Username
 		password := incomingUser.Password
 
-		if dbUser, hasUser := DBHasUser(db, username); hasUser {
-			//login credentials are valid
-			if dbUser.Password == password {
+		if hasUser := DBHasUser(db, username); hasUser {
+			//check that login credentials are valid
+			
+			if CheckPasswordHash(password, DBGetPasswordHash(db, username)) {
 				tokenString, err := CreateToken(username)
 				if err != nil {
 					panic(err)
@@ -115,6 +126,12 @@ func LoginWrapper(db *sql.DB) gin.HandlerFunc {
 	return Login
 }
 
+/* ---------------------------HELPER FUNCTIONS--------------------------- */
+func CheckPasswordHash(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
+}
+
 func AuthRequired(c *gin.Context) {
 	tokenString, err := c.Cookie("Authorization")
 
@@ -123,11 +140,12 @@ func AuthRequired(c *gin.Context) {
 		return
 	}
 
-	err = VerifyToken(tokenString)
+	tokenString, err = VerifyToken(tokenString)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{})
 		return
 	}
+	fmt.Printf("%s\n", tokenString)
 
 	c.Next()
 }

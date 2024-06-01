@@ -25,6 +25,7 @@ def create_user(ID, password):
         json=new_user, 
         headers={'Origin': ORIGIN}, cookies=cookies
     )
+    print(test_post.text)
 
 def login(ID, password):
     new_user = {'username': ID, 'password': password}
@@ -41,5 +42,4 @@ create_user('RS', '1239120')
 create_user('RS', '1239120')
 cookies = login('RS', '1239120')
 print(cookies)
-get_users()
 get_users_by_id('RS')

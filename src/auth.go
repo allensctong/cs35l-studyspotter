@@ -12,6 +12,9 @@ import (
 
 	"github.com/golang-jwt/jwt/v5"
 )
+
+
+
 /*//Load private key
 var pwd, _ = os.Getwd()
 var privKeyLoc = pwd + "/jwtRS256.key"
@@ -67,18 +70,18 @@ func CreateToken(username string) (string, error) {
 	return tokenString, nil
 }
 
-func VerifyToken(tokenString string) error {
+func VerifyToken(tokenString string) (string, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		return secretKey, nil
 	})
 
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	if !token.Valid {
-		return fmt.Errorf("invalid token")
+		return "", fmt.Errorf("invalid token")
 	}
-
-	return nil
+	tokenString = token.Raw
+	return tokenString, nil
 }
