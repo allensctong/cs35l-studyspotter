@@ -9,7 +9,8 @@ export default defineConfig({
 			input: {
 				user: 'user.html',
 				login: 'login.html',
-				main: 'main.html'
+				main: 'main.html',
+				upload: 'upload.html'
 			}
 		}
 	}
