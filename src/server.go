@@ -103,7 +103,6 @@ func LoginWrapper(db *sql.DB) gin.HandlerFunc {
 
 		if hasUser := DBHasUser(db, username); hasUser {
 			//check that login credentials are valid
-			
 			if CheckPasswordHash(password, DBGetPasswordHash(db, username)) {
 				tokenString, err := CreateToken(username)
 				if err != nil {
@@ -124,6 +123,23 @@ func LoginWrapper(db *sql.DB) gin.HandlerFunc {
 	}
 
 	return Login
+}
+
+func CORSMiddleware() gin.HandlerFunc {
+    return func(c *gin.Context) {
+	    c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
+	c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+        c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+        c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
+	fmt.Println(c.Request.Host, c.Request.RemoteAddr, c.Request.RequestURI)
+
+        if c.Request.Method == "OPTIONS" {
+            c.AbortWithStatus(204)
+            return
+        }
+
+        c.Next()
+    }
 }
 
 /* ---------------------------HELPER FUNCTIONS--------------------------- */

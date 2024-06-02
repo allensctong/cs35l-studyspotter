@@ -36,10 +36,11 @@ def login(ID, password):
     )
     return test_login.cookies
 
-get_users()
-get_users_by_id('RS')
+get_users_by_id('uwu')
+'''get_users_by_id('RS')
 create_user('RS', '1239120')
 create_user('RS', '1239120')
 cookies = login('RS', '1239120')
 print(cookies)
 get_users_by_id('RS')
+'''
