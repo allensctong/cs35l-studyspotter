@@ -39,9 +39,3 @@ function Login() {
 }
 
 export default Login
-
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <Login />
-  </React.StrictMode>,
-)
