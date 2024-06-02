@@ -1,6 +1,4 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './Upload.css'
 
 
@@ -64,7 +62,7 @@ function Upload() {
         {error && <p className="error-message">{error}</p>}
         {imageURL && <img src={imageURL} alt="Selected" className="uploaded-image" />}
         <div className="input-container">
-          <label htmlFor="userInput">Enter your text: </label>
+          <label htmlFor="userInput">Caption (optional): </label>
           <input id="userInput" type="text" value={userInput} onChange={handleInputChange}></input>
         </div>
         <button className="uploadButton" onClick={handleUpload}> Upload</button>
