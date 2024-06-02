@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react';
 
-const ProfileComponent = () => {
+const ProfileComponent = ( {username} ) => {
   const [profile, setProfile] = useState({
-    profilePicture: './src/assets/Default_pfp.svg',
+    profilePicture: './src/assets/Default_pfp.svg.png',
     profileName: '',
     bio: '',
     followerCount: 0,
@@ -13,7 +13,7 @@ const ProfileComponent = () => {
     const fetchProfile = async () => {
       try {
         // Fetch the current user
-        const profileResponse = await fetch('http://localhost:8080/api/user/current', {
+        const profileResponse = await fetch('http://localhost:8080/api/user/${username}', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
