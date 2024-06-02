@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile Page</title>
+    <title>Profile</title> <!-- ideally should fetch user name-->
     <link rel="stylesheet" href="userpage.css">
 </head>
 <body>
@@ -13,8 +13,9 @@
         </a>
     </div>
     <div class="profile-container">
-        <div class="profile-header">
-            <div class="profile-picture"></div>
+        <div id="profile-header">
+            <script type="module" src="./profileHeader.jsx"></script>
+            <!-- <div class="profile-picture"></div>
             <div class="profile-info">
                 <h1>Profile Name</h1>
                 <p>Bio</p>
@@ -23,7 +24,7 @@
                     <span id="following-count">Following: 0</span>
                 </div>
                 <button id="friend-button">Add Friend</button>
-            </div>
+            </div> -->
         </div>
         <div class="gallery">
             <div class="photo add-photo">
@@ -37,8 +38,8 @@
         </div>
     </div>
 
-    <script src="addfriend.js"></script>
-    <script src="follower.js"></script>
+    <!-- <script src="addfriend.js"></script>
+    <script src="follower.js"></script> -->
 </body>
 </html>
 
