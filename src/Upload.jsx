@@ -32,9 +32,11 @@ function Upload() {
   const handleUpload = () => {
     if(selectedImage==null){
       setError("Please upload an image before submitting.");
-    }
+    }else{
     console.log("User Input:", userInput);
     console.log("Selected Image:", selectedImage);
+    window.location.href = "../uploadSuccess.html";
+    }
  
     
     
