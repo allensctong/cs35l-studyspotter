@@ -28,18 +28,17 @@ function ProfilePage ({username = ''}) {
     
     async function getUserInfo() {
       //if input is default get username from cookie
-      let username = '';
       const curUser = getCookieValue('Username');
       if (username === "") {
         setProfileName(curUser);
+	username = curUser;
       } else {
         setProfileName(username);
       }
-      await setIsUser(profileName === curUser);
+      setIsUser(profileName === curUser);
       
       //fetch profile info
-      let response = await fetch('http://localhost:8080/api/user/' + profileName);
-      alert('http://localhost:8080/api/user/' + profileName);
+      let response = await fetch('http://localhost:8080/api/user/' + username);
       if (await response.status !== 200) {
         //TODO handle error
         alert('ERROR');
