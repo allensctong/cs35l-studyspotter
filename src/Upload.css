@@ -1,8 +1,19 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+/*#root {
+  /*max-width: 100%;*/
+  /*margin: 0 auto;*/
+  /*padding: 2rem;*/
+  /*text-align: center;
+  background-color: #081D39;
+}*/
+body {
+  line-height: 1.5;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  color: #ffffff;
+  margin: 0;
+  padding: 0;
+  background: #081D39;
   text-align: center;
+
 }
 
 .logo {
@@ -42,10 +53,26 @@
 }
 
 .uploadButton {
-  margin-top: 220px;
+  background-color: #61C1BF; /* Teal as per the logo accent */
+  color: #ffffff;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 15px;
+  transition: background-color 0.3s, color 0.3s, transform 0.2s;
+  margin-top: 20px;
 }
 .setProfileButton{
-  margin-top: 220px;
+  background-color: #61C1BF; /* Teal as per the logo accent */
+  color: #ffffff;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 15px;
+  transition: background-color 0.3s, color 0.3s, transform 0.2s;
+  margin-left: 20px;
+  margin-top: 20px;
+  
 }
 
 .image-preview-container {
