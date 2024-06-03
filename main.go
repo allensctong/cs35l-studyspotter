@@ -12,7 +12,7 @@ import (
 
 func main() {
 	// Set up database.
-	dbName := "studyspotter.db"
+	dbName := "data/studyspotter.db"
 	db, err := sql.Open("sqlite", dbName)
 	if err != nil {
 		fmt.Printf("Unable to use data source: %s", err)
