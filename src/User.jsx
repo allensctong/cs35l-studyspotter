@@ -60,7 +60,9 @@ function ProfilePage ({username = ''}) {
     return (
         <div>
             <div className="top-bar">
-                <img src="SSlogo.png" className="logo" alt="Logo" />
+                <a href="/main" class="logo-link">
+                    <img src="SSlogo.png" className="logo" alt="Logo" />
+                </a>
             </div>
             <div className="profile-container">
                 <div className="profile-header">
@@ -70,7 +72,7 @@ function ProfilePage ({username = ''}) {
                         <p> {profileBio} </p>
                         <div className="counts">
                             <span id="follower-count">Followers: {followerCount}</span> |
-                            <span id="following-count">Following: {followingCount}</span>
+                            <span id="following-count"> Following: {followingCount}</span>
                         </div>
                         {isUser && (
                             <button id="friend-button" onClick={handleAddFriend}>
