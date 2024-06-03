@@ -36,9 +36,11 @@ const ProfilePage = ({ loggedInUserId, profileId, profileName, profileBio, initi
                     </div>
                 </div>
                 <div className="gallery">
-                    <div className="photo add-photo">
-                        <a href="upload" class="add-button">+</a>
-                    </div>
+                    {loggedInUserID === profileID && (
+                        <div className="photo add-photo">
+                            <a href="upload" class="add-button">+</a>
+                        </div>
+                    )}
                     <div class="photo"></div>
                     <div class="photo"></div>
                     <div class="photo"></div>
