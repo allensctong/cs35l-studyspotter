@@ -37,7 +37,9 @@ def login(ID, password):
     )
     return test_login.cookies
 
-get_users_by_id('test')
+#get_users_by_id('test')
+create_user('RS', '1239120')
+get_users_by_id('RS')
 '''get_users_by_id('RS')
 create_user('RS', '1239120')
 create_user('RS', '1239120')
