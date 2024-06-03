@@ -125,6 +125,10 @@ func LoginWrapper(db *sql.DB) gin.HandlerFunc {
 	return Login
 }
 
+func PostWrapper(db *sql.DB) gin.HandlerFunc {
+
+}
+
 func CORSMiddleware() gin.HandlerFunc {
     return func(c *gin.Context) {
 	    c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")

@@ -34,5 +34,6 @@ func main() {
 	authorized.GET("api/user/:username", src.GetUserWrapper(db))
 	router.POST("api/signup", src.CreateUserWrapper(db))
 	router.POST("api/login", src.LoginWrapper(db))
+	router.POST("api/post", src.PostWrapper(db))
 	router.Run("localhost:8080")
 }

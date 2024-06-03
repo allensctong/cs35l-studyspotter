@@ -15,7 +15,6 @@ function Login() {
 	function handleChangePassword(Event) {
 		setPassword(Event.target.value);
 	}
-
 	async function handleLogin() {
 		let response = await fetch("http://localhost:8080/api/login", {
 			method: 'POST',
@@ -32,8 +31,7 @@ function Login() {
 		if(await response.status !== 200) {
 			alert("Login failed!");
 			return;
-    }
-
+    		}
 		window.location.href = 'http://localhost:5173/main';
 	}
 
