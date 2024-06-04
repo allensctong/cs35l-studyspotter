@@ -1,46 +1,13 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile</title> <!-- ideally should fetch user name-->
-    <link rel="stylesheet" href="userpage.css">
-</head>
-<body>
-    <div class="top-bar">
-        <a href="/main" class="logo-link">
-            <img src="SSlogo.png" class="logo">
-        </a>
-    </div>
-    <div class="profile-container">
-        <div id="profile-header">
-            <script type="module" src="./profileHeader.jsx"></script>
-            <!-- <div class="profile-picture"></div>
-            <div class="profile-info">
-                <h1>Profile Name</h1>
-                <p>Bio</p>
-                <div class="counts">
-                    <span id="follower-count">Followers: 0</span> |
-                    <span id="following-count">Following: 0</span>
-                </div>
-                <button id="friend-button">Add Friend</button>
-            </div> -->
-        </div>
-        <div class="gallery">
-            <div class="photo add-photo">
-                <a href="upload" class="add-button">+</a>
-            </div>
-            <div class="photo"></div>
-            <div class="photo"></div>
-            <div class="photo"></div>
-            <div class="photo"></div>
-            <div class="photo"></div>
-        </div>
-    </div>
-
-    <!-- <script src="addfriend.js"></script>
-    <script src="follower.js"></script> -->
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Page</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/userPage.jsx"></script>
+  </body>
 </html>
-
-

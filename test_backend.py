@@ -16,6 +16,7 @@ def get_users_by_id(ID):
         f"http://localhost:8080/api/user/{ID}", 
         headers={'Origin': ORIGIN}, cookies=cookies
     )
+    print(f"http://localhost:8080/api/user/{ID}")
     print(test_get.text)
 
 def create_user(ID, password):
@@ -36,10 +37,13 @@ def login(ID, password):
     )
     return test_login.cookies
 
-get_users()
+#get_users_by_id('test')
+create_user('RS', '1239120')
 get_users_by_id('RS')
+'''get_users_by_id('RS')
 create_user('RS', '1239120')
 create_user('RS', '1239120')
 cookies = login('RS', '1239120')
 print(cookies)
 get_users_by_id('RS')
+'''

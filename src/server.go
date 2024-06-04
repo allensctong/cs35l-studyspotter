@@ -103,14 +103,14 @@ func LoginWrapper(db *sql.DB) gin.HandlerFunc {
 
 		if hasUser := DBHasUser(db, username); hasUser {
 			//check that login credentials are valid
-			
 			if CheckPasswordHash(password, DBGetPasswordHash(db, username)) {
 				tokenString, err := CreateToken(username)
 				if err != nil {
 					panic(err)
 				}
 				c.SetSameSite(http.SameSiteDefaultMode)
-				c.SetCookie("Authorization", tokenString, 3600 * 24, "", "", false, true)
+				c.SetCookie("Authorization", tokenString, 3600 * 24, "", "", false, false)
+				c.SetCookie("Username", username, 3600 * 24, "", "", false, false)
 				c.JSON(http.StatusOK, gin.H{})
 				return
 			}
@@ -124,6 +124,43 @@ func LoginWrapper(db *sql.DB) gin.HandlerFunc {
 	}
 
 	return Login
+}
+
+func PostWrapper(db *sql.DB) gin.HandlerFunc {
+	Post := func (c *gin.Context) {
+//		var incomingPost schemas.Post
+		file, err := c.FormFile("image")
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(file.Filename)
+		caption, _ := c.GetPostForm("caption")
+		username, _ := c.GetPostForm("username")
+		fmt.Println(caption)
+		fmt.Println(username)
+
+		err = c.SaveUploadedFile(file, "data/"+file.Filename)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"message": "error with upload"})
+		}
+		c.JSON(http.StatusOK, gin.H{})
+	}
+	return Post
+}
+
+func CORSMiddleware() gin.HandlerFunc {
+    return func(c *gin.Context) {
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
+	c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+        c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+        c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
+        if c.Request.Method == "OPTIONS" {
+            c.AbortWithStatus(204)
+            return
+        }
+
+        c.Next()
+    }
 }
 
 /* ---------------------------HELPER FUNCTIONS--------------------------- */

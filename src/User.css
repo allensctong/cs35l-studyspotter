@@ -33,7 +33,7 @@ body {
     margin: 20px auto;
 }
 
-#profile-header {
+.profile-header {
     display: flex;
     align-items: center;
     border-bottom: 1px solid #dbdbdb;
