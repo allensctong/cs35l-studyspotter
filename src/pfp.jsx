@@ -33,44 +33,30 @@ function Upload() {
   };
 
   const handleUpload = async () => {
-    if(selectedImage==null){
+    if (selectedImage == null) {
       setError("Please upload an image before submitting.");
-    }else{
-      console.log("Selected Image:", selectedImage);
+    } else {
+        /*
+      setProfileImage(selectedImage);
+      console.log("Profile Picture:", profilePicture);
       console.log("Username:", document.cookie);
 
       const formData = new FormData();
       formData.append('username', getCookieValue('Username'));
-      formData.append('caption', userInput);
       formData.append('image', selectedImage);
-      let response = await fetch("http://localhost:8080/api/post", {
-        method: 'POST',
+      // Need to edit fetch request
+      let response = await fetch('http://localhost:8080/api/user/' + getCookieValue('Username'), {
+        method: 'PUT',
         credentials: 'include',
         body: formData,
       });
       if(await response.status !== 200) {
         alert("Upload failed!");
         return;
-      }
-      
+      } */
       window.location.href = "../uploaded";
     }
- 
-    
-    
-
-
   };
-  const handleProfile=()=>{
-    if(selectedImage==null){
-      setError("Please upload an image before submitting.");
-    }
-    setProfileImage(selectedImage);
-    console.log("Profile Picture:", profilePicture);
-  };
- 
- 
-
  
   return (
     <>
@@ -82,9 +68,8 @@ function Upload() {
         {error && <p className="error-message">{error}</p>} <br />
         {imageURL && <img src={imageURL} alt="Selected" className="uploaded-image" />}
         {imageURL && <br />}
-        <button className="setProfileButton" onClick={handleProfile}> Set as Profile Picture</button>
+        <button className="setProfileButton" onClick={handleUpload}> Set as Profile Picture</button>
       </div>
-
     </>
   )
 }

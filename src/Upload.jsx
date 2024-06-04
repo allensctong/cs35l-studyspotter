@@ -17,7 +17,6 @@ function Upload() {
   const [error, setError] = useState('');
   const [profilePicture, setProfileImage]=useState(null);
 
-
   const handleInputChange= (Event)=> {
     setUserInput(Event.target.value);
   };
@@ -62,22 +61,7 @@ function Upload() {
       
       window.location.href = "../uploaded";
     }
- 
-    
-    
-
-
   };
-  const handleProfile=()=>{
-    if(selectedImage==null){
-      setError("Please upload an image before submitting.");
-    }
-    setProfileImage(selectedImage);
-    console.log("Profile Picture:", profilePicture);
-  };
- 
- 
-
  
   return (
     <>
@@ -93,9 +77,7 @@ function Upload() {
           <input id="userInput" type="text" value={userInput} onChange={handleInputChange}></input>
         </div>
         <button className="uploadButton" onClick={handleUpload}> Upload</button>
-        <button className="setProfileButton" onClick={handleProfile}> Set as Profile Picture</button>
       </div>
-
     </>
   )
 }

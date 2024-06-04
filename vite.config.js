@@ -12,7 +12,7 @@ export default defineConfig({
 				main: 'main.html',
 				upload: 'upload.html',
 				pfp: 'pfp.html',
-				uploaded: 'uploadedSuccess.html'
+				uploaded: 'uploaded.html'
 			}
 		}
 	}
