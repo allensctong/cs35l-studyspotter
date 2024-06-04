@@ -39,14 +39,14 @@ const App = () => {
    <div>
      <div className="header">
        <img src="/SSlogo.png" alt="Study Spotter Logo" className="logo" />
-       <form action="search.html" method="get" className="search-bar">
+       <form method="get" className="search-bar">
          <input type="text" placeholder="Search..." name="query" />
          <button type="submit">
            <FontAwesomeIcon icon={faSearch} />
          </button>
        </form>
        <div className="right-buttons">
-         <button onClick={() => window.location.href = 'profile.html'}>
+         <button>
            <FontAwesomeIcon icon={faUser} /> Profile
          </button>
        </div>
