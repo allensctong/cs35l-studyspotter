@@ -1,8 +1,14 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './Upload.css'
 
+function getCookieValue(name) 
+    {
+      const regex = new RegExp(`(^| )${name}=([^;]+)`)
+      const match = document.cookie.match(regex)
+      if (match) {
+        return match[2]
+      }
+   }
 
 function Upload() {
   const [userInput, setUserInput]=useState('');
@@ -15,6 +21,7 @@ function Upload() {
   const handleInputChange= (Event)=> {
     setUserInput(Event.target.value);
   };
+
   const handleImageChange = (Event)=> {
     const file = Event.target.files[0];
     if (file) {
@@ -31,12 +38,30 @@ function Upload() {
     }
   };
 
-  const handleUpload = () => {
+  const handleUpload = async () => {
     if(selectedImage==null){
       setError("Please upload an image before submitting.");
+    }else{
+      console.log("User Input:", userInput);
+      console.log("Selected Image:", selectedImage);
+      console.log("Username:", document.cookie);
+
+      const formData = new FormData();
+      formData.append('username', getCookieValue('Username'));
+      formData.append('caption', userInput);
+      formData.append('image', selectedImage);
+      let response = await fetch("http://localhost:8080/api/post", {
+        method: 'POST',
+        credentials: 'include',
+        body: formData,
+      });
+      if(await response.status !== 200) {
+        alert("Upload failed!");
+        return;
+      }
+      
+      window.location.href = "../uploadSuccess.html";
     }
-    console.log("User Input:", userInput);
-    console.log("Selected Image:", selectedImage);
  
     
     
@@ -61,10 +86,10 @@ function Upload() {
         <h2>Add Image:</h2>
         
         <input type="file" accept=".jpg,.jpeg,.png" onChange={handleImageChange} />
-        {error && <p className="error-message">{error}</p>}
+        {error && <p className="error-message">{error}</p>} <br />
         {imageURL && <img src={imageURL} alt="Selected" className="uploaded-image" />}
         <div className="input-container">
-          <label htmlFor="userInput">Enter your text: </label>
+          <label htmlFor="userInput">Caption (optional): </label>
           <input id="userInput" type="text" value={userInput} onChange={handleInputChange}></input>
         </div>
         <button className="uploadButton" onClick={handleUpload}> Upload</button>
@@ -72,29 +97,6 @@ function Upload() {
       </div>
 
     </>
-
-   /* <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </> */
   )
 }
 
