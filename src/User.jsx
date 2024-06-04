@@ -31,14 +31,19 @@ function ProfilePage ({username = ''}) {
       const curUser = getCookieValue('Username');
       if (username === "") {
         setProfileName(curUser);
-	username = curUser;
+        username = curUser;
       } else {
         setProfileName(username);
       }
-      setIsUser(profileName === curUser);
       
       //fetch profile info
-      let response = await fetch('http://localhost:8080/api/user/' + username);
+      let response = await fetch('http://localhost:8080/api/user/' + username, {
+        credentials: 'include',
+      });
+      if (await response.status == 401) {
+        window.location.href = 'login';
+        return;
+      }
       if (await response.status !== 200) {
         //TODO handle error
         alert('ERROR');
@@ -47,6 +52,7 @@ function ProfilePage ({username = ''}) {
       
       response = await response.json();
       setProfileBio(response.bio);
+      setIsUser(username === curUser);
       setFollowerCount(response.followers);
       setFollowingCount(response.following);
 
@@ -64,7 +70,7 @@ function ProfilePage ({username = ''}) {
             </div>
             <div className="profile-container">
                 <div className="profile-header">
-                    <div className="profile-picture"></div>
+                    <img className="profile-picture" src="http://localhost:8080/assets/default-pfp.jpg" width={250} height={250} />
                     <div className="profile-info">
                         <h1> {profileName} </h1>
                         <p> {profileBio} </p>

@@ -11,33 +11,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func GetUsersWrapper(db *sql.DB) gin.HandlerFunc {
-	GetUsers := func (c *gin.Context) {
-		var users = []schemas.Login{}
-		var username string
-		var password string
-
-		rows, err := db.Query("SELECT username, password FROM user")
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer rows.Close()
-
-		for rows.Next() {
-			if err := rows.Scan(&username, &password); err != nil {
-				log.Fatal(err)
-			}
-			users = append(users, schemas.Login{username, password})
-		}
-
-		if err := rows.Err(); err != nil {
-			log.Fatal(err)
-		}
-		c.IndentedJSON(http.StatusOK, users)	
-	}
-	return GetUsers
-}
-
 //Get User Profile (GET FOR USER PAGE)
 func GetUserWrapper(db *sql.DB) gin.HandlerFunc {
 	GetUser := func (c *gin.Context) {
@@ -139,7 +112,7 @@ func PostWrapper(db *sql.DB) gin.HandlerFunc {
 		fmt.Println(caption)
 		fmt.Println(username)
 
-		err = c.SaveUploadedFile(file, "data/"+file.Filename)
+		err = c.SaveUploadedFile(file, "assests/"+file.Filename)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"message": "error with upload"})
 		}

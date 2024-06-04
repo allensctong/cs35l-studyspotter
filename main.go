@@ -12,7 +12,7 @@ import (
 
 func main() {
 	// Set up database.
-	dbName := "data/studyspotter.db"
+	dbName := "studyspotter.db"
 	db, err := sql.Open("sqlite", dbName)
 	if err != nil {
 		fmt.Printf("Unable to use data source: %s", err)
@@ -28,10 +28,12 @@ func main() {
 	router := gin.Default()
 	// Set up CORS
 	router.Use(src.CORSMiddleware())
+	router.Static("/assets", "./assets")
 
-	authorized := router.Group("/") //, src.AuthRequired)
-	authorized.GET("api/user", src.GetUsersWrapper(db))
+	authorized := router.Group("/", src.AuthRequired)
 	authorized.GET("api/user/:username", src.GetUserWrapper(db))
+	authorized.PUT("api/user/:username/bio", )
+	authorized.PUT("api/user/:username/pfp", )
 	router.POST("api/signup", src.CreateUserWrapper(db))
 	router.POST("api/login", src.LoginWrapper(db))
 	router.POST("api/post", src.PostWrapper(db))
