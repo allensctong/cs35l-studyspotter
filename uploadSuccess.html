@@ -1,25 +1,57 @@
 <!doctype html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style_specific_mint.css">
-    <img src="SSlogo.png" alt="Study Spotter Logo" class="logo">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .content {
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+        }
+        .logo {
+            width: 150px; 
+            height: auto;
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px; 
+        }
+        h1 {
+            font-size: 40px; 
+            font-family: 'Arial', sans-serif; 
+            font-weight: bold; 
+            color: white; 
+        }
+    </style>
     <title>Upload Success</title>
-   
-  </head>
-  <body>
-    <div>
-        <h1> Upload Success!</h1>
+</head>
+<body>
+    <img src="SSlogo.png" alt="Study Spotter Logo" class="logo">
+    <div class="content">
+        <h1>Upload Success!</h1>
         <div class="buttons">
-            <button id="Return home"> Return to Home Page</button>
+            <button id="Go home">Go to Home Page</button>
+            <button id="Return profile">Return to Profile Page</button>
         </div>
-        <script> 
-            document.getElementById("Return home").addEventListener("click", function(){
-            // Redirect to a different page
-            window.location.href = "main";});
-        </script>
     </div>
-  </body>
+    <script>
+        document.getElementById("Go home").addEventListener("click", function() {
+            window.location.href = "main";
+        });
+        document.getElementById("Return profile").addEventListener("click", function() {
+            window.location.href = "user";
+        });
+    </script>
+</body>
 </html>

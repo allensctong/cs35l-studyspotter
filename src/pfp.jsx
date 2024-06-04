@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import './Upload.css'
+import './pfp.css'
 
 function getCookieValue(name) 
     {
@@ -11,16 +11,10 @@ function getCookieValue(name)
    }
 
 function Upload() {
-  const [userInput, setUserInput]=useState('');
   const[selectedImage, setSelectedImage]=useState(null);
   const [imageURL, setImageURL] = useState(null);
   const [error, setError] = useState('');
   const [profilePicture, setProfileImage]=useState(null);
-
-
-  const handleInputChange= (Event)=> {
-    setUserInput(Event.target.value);
-  };
 
   const handleImageChange = (Event)=> {
     const file = Event.target.files[0];
@@ -42,7 +36,6 @@ function Upload() {
     if(selectedImage==null){
       setError("Please upload an image before submitting.");
     }else{
-      console.log("User Input:", userInput);
       console.log("Selected Image:", selectedImage);
       console.log("Username:", document.cookie);
 
@@ -82,17 +75,13 @@ function Upload() {
   return (
     <>
       <div>
-        <h1> Upload Page</h1>
+        <h1> Upload Profile Picture</h1>
         <h2>Add Image:</h2>
         
         <input type="file" accept=".jpg,.jpeg,.png" onChange={handleImageChange} />
         {error && <p className="error-message">{error}</p>} <br />
         {imageURL && <img src={imageURL} alt="Selected" className="uploaded-image" />}
-        <div className="input-container">
-          <label htmlFor="userInput">Caption (optional): </label>
-          <input id="userInput" type="text" value={userInput} onChange={handleInputChange}></input>
-        </div>
-        <button className="uploadButton" onClick={handleUpload}> Upload</button>
+        {imageURL && <br />}
         <button className="setProfileButton" onClick={handleProfile}> Set as Profile Picture</button>
       </div>
 
