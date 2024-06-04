@@ -15,6 +15,15 @@ function Login() {
 	function handleChangePassword(Event) {
 		setPassword(Event.target.value);
 	}
+
+	function handleEnteringPassword(Event) {
+        const invalidChars = /[:]/; // can add to this
+        if (invalidChars.test(Event.key)) {
+			// listen to the keys pressed on the keyboard and escape invalidchars
+            Event.preventDefault();
+        }
+    }
+
 	async function handleLogin() {
 		let response = await fetch("http://localhost:8080/api/login", {
 			method: 'POST',
@@ -70,7 +79,7 @@ function Login() {
 			<div>
 				<form onSubmit={onSubmit}>
 					Username: <input name="Username" value={username} onChange={handleChangeUsername} /><br/>
-					Password: <input name="Password" value={password} onChange={handleChangePassword} /><br />
+					Password: <input name="Password" type='password' value={password} onChange={handleChangePassword} onKeyDown={handleEnteringPassword} /><br />
 					<button type="Submit" onClick={handleLogin}>Login</button><br />
 					<button type="Submit" onClick={handleSignup}>Create Account</button>
 				</form>
