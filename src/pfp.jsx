@@ -36,7 +36,6 @@ function Upload() {
     if (selectedImage == null) {
       setError("Please upload an image before submitting.");
     } else {
-        /*
       setProfileImage(selectedImage);
       console.log("Profile Picture:", profilePicture);
       console.log("Username:", document.cookie);
@@ -53,7 +52,7 @@ function Upload() {
       if(await response.status !== 200) {
         alert("Upload failed!");
         return;
-      } */
+      }
       window.location.href = "../uploaded";
     }
   };
