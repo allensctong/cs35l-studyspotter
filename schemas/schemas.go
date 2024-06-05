@@ -42,6 +42,6 @@ type UserProfile struct {
 	Bio string `json:"bio"`
 	Following int `json:"following"`
 	Followers int `json:"followers"`
-	ProfilePicture Image
+	// ProfilePicture Image
 	//Posts []Post `json: "posts"`
 }

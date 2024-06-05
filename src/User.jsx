@@ -10,7 +10,7 @@ function getCookieValue(name)
       }
    }
 
-// we can see what the backend db is storing, but we should pass the loggedIn user ids, profile id, etc. in here 
+// we can see what the backend db is storing, but we should pass the loggedIn user ids, profile id, etc. in here, input validation
 function ProfilePage ({username = ''}) {
     const [followerCount, setFollowerCount] = useState(0);
     const [followingCount, setFollowingCount] = useState(0);
@@ -35,7 +35,7 @@ function ProfilePage ({username = ''}) {
       } else {
         setProfileName(username);
       }
-      setIsUser(profileName === curUser);
+      setIsUser(username === curUser);
       
       //fetch profile info
       let response = await fetch('http://localhost:8080/api/user/' + username);

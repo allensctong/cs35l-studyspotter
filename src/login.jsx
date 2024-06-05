@@ -50,7 +50,7 @@ function Login() {
 		window.location.href = 'http://localhost:5173/main';
 	}
 
-	async function handleSignup() {
+	async function handleSignup() { //redirect after account created, back to login after create account
 		if (password !== verifyPassword){
 			alert("The passwords you entered don't match, try again!")
 			return;
