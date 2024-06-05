@@ -19,10 +19,11 @@ function Login() {
 	}
 
 	function handleEnteringPassword(Event) {
-        const invalidChars = /[:]/; // can add to this
+        const invalidChars = /[:~` ]/; // can add to this
         if (invalidChars.test(Event.key)) {
 			// listen to the keys pressed on the keyboard and escape invalidchars
             Event.preventDefault();
+			alert("Invalid characters entered!");
         }
     }
 
@@ -31,6 +32,10 @@ function Login() {
     }
 
 	async function handleLogin() {
+		if (username==='' || password==='') {
+			alert("User name or password not enetered!");
+		}
+
 		let response = await fetch("http://localhost:8080/api/login", {
 			method: 'POST',
 			headers: {
@@ -51,6 +56,10 @@ function Login() {
 	}
 
 	async function handleSignup() {
+		if (username==='' || password==='' || verifyPassword==='') {
+			alert("Username or password not enetered!");
+		}
+
 		if (password !== verifyPassword){
 			alert("The passwords you entered don't match, try again!")
 			return;
