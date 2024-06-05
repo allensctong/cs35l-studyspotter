@@ -7,6 +7,8 @@ import './login.css'
 function Login() {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
+	const [verifyPassword, setVerifyPassword] = useState('');
+    const [isSigningUp, setIsSigningUp] = useState(false);
 
 	function handleChangeUsername(Event) {
 		setUsername(Event.target.value);
@@ -22,6 +24,10 @@ function Login() {
 			// listen to the keys pressed on the keyboard and escape invalidchars
             Event.preventDefault();
         }
+    }
+
+	function handleChangeVerifyPassword(event) {
+        setVerifyPassword(event.target.value);
     }
 
 	async function handleLogin() {
@@ -45,6 +51,11 @@ function Login() {
 	}
 
 	async function handleSignup() {
+		if (password !== verifyPassword){
+			alert("The passwords you entered don't match, try again!")
+			return;
+		}
+		console.log("sign up successful") //remove for debugging
 		let response = await fetch("http://localhost:8080/api/signup", {
 			method: 'POST',
 			headers: {
@@ -78,10 +89,37 @@ function Login() {
 			</div>
 			<div>
 				<form onSubmit={onSubmit}>
-					Username: <input name="Username" value={username} onChange={handleChangeUsername} /><br/>
-					Password: <input name="Password" type='password' value={password} onChange={handleChangePassword} onKeyDown={handleEnteringPassword} /><br />
-					<button type="Submit" onClick={handleLogin}>Login</button><br />
-					<button type="Submit" onClick={handleSignup}>Create Account</button>
+					<label>
+					Username: <input name="Username" value={username} onChange={handleChangeUsername} />
+					</label>
+					<br/>
+					<label>
+					Password: <input name="Password" type='password' value={password} onChange={handleChangePassword} onKeyDown={handleEnteringPassword} />
+					</label>
+					<br/>
+					{isSigningUp && (
+						<>
+						<label>
+							Verify Password:
+							<input
+								name="VerifyPassword"
+								type="password"
+								value={verifyPassword}
+								onChange={handleChangeVerifyPassword}
+								onKeyDown={handleEnteringPassword}
+							/>
+						</label>
+						<br />
+						<button type="button" onClick={handleSignup}>Submit</button>
+					</>
+					)}
+					{!isSigningUp && (
+						<>
+							<button type="Submit" onClick={handleLogin}>Login</button><br />
+							<button type="Submit" onClick={() => setIsSigningUp(true)}>Create Account</button>
+						</>
+					)}
+					
 				</form>
 			</div>
 		</>
