@@ -37,7 +37,6 @@ function ProfilePage ({username = ''}) {
       } else {
         setProfileName(username);
       }
-      setIsUser(profileName === curUser);
       
       //fetch profile info
       let response = await fetch('http://localhost:8080/api/user/' + username);
@@ -46,6 +45,8 @@ function ProfilePage ({username = ''}) {
         alert('ERROR');
         return;
       }
+
+      setIsUser(username === curUser);
       
       response = await response.json();
       setProfileBio(response.bio);
@@ -99,7 +100,13 @@ function ProfilePage ({username = ''}) {
             </div>
             <div className="profile-container">
                 <div className="profile-header">
-                    <div className="profile-picture"></div>
+                    <div className="profile-picture">
+                        {isUser && (
+                            <a href="/pfp" class="edit-profile-link">
+                                <img src="../pencil.png" alt="Edit Profile" class="pencil-icon" />
+                            </a>
+                        )}
+                    </div>
                     <div className="profile-info">
                         <h1> {profileName} </h1>
                         <p> {profileBio} </p>
