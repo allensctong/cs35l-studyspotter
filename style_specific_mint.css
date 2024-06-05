@@ -37,34 +37,6 @@ body {
     width: 80px;
 }
 
-.search-bar {
-    display: flex;
-    align-items: center;
-    flex: 1;
-    margin: 0 20px;
-    max-width: 400px; /* Adjust this width as needed */
-}
-
-.search-bar input {
-    padding: 5px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    margin-right: 5px;
-    flex: 1;
-}
-
-.search-bar button {
-    background-color: #61C1BF;
-    color: #ffffff;
-    cursor: pointer;
-    border: none;
-    border-radius: 5px;
-    padding: 5px 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
 .right-buttons {
     display: flex;
     align-items: center;
@@ -94,7 +66,7 @@ body {
 }
 
 .post {
-    width: 40%;
+    width: 70%;
     background-color: #ffffff;
     color: #333;
     border: none;
@@ -133,7 +105,7 @@ body {
     border: none;
     border-radius: 5px;
     padding: 8px 15px;
-    margin: 50 5px; 
+    margin: 50 5px;
     transition: background-color 0.3s, color 0.3s, transform 0.2s;
 }
 
@@ -196,4 +168,66 @@ body {
     .menu-bar {
         justify-content: space-around;
     }
+}
+
+.search-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  margin: 0 20px;
+  max-width: 400px;
+}
+
+.search-bar input {
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin-right: 5px;
+  flex: 1;
+}
+
+.search-bar button {
+  background-color: #61C1BF;
+  color: #ffffff;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-results {
+  position: absolute;
+  top: 40px;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+.search-result-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.search-result-item:hover {
+  background-color: #f0f0f0;
+}
+
+.profile-picture {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 10px;
 }
