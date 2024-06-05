@@ -61,6 +61,7 @@ body {
   padding: 8px 15px;
   transition: background-color 0.3s, color 0.3s, transform 0.2s;
   margin-top: 20px;
+  margin-left: 20px;
 }
 .setProfileButton{
   background-color: #61C1BF; /* Teal as per the logo accent */

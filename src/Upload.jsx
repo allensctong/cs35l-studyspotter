@@ -129,6 +129,10 @@ function Upload() {
     console.log("Profile Picture:", profilePicture);
   };
 
+  const handleCancel=()=>{
+    window.location.href = "../user.html";
+  }
+
  
  
 
@@ -142,7 +146,7 @@ function Upload() {
         {imageURL ? ( <img src={imageURL} width={postWidth} height={postHeight} alt="Selected" className="image-preview-container" />)
         :
         
-       (<button className="add-button" onClick={handleClick}>+</button>)}
+       (<button className="add-button" onClick={handleClick}>Click to Add Your Image</button>)}
         < input type="file" accept=".jpg,.jpeg,.png" onChange={handleImageChange} ref={hiddenFileInput} style={{display: 'none'}}/>
         {error && <p className="error-message">{error}</p>}
         
@@ -152,8 +156,13 @@ function Upload() {
           <label htmlFor="userInput">Caption (optional): </label>
           <input id="userInput" type="text" value={userInput} onChange={handleInputChange}></input>
         </div>
+        <div>
         <button className="uploadButton" onClick={handleUpload}> Upload</button>
-        <button className="setProfileButton" onClick={handleProfile}> Set as Profile Picture</button>
+        <button className="uploadButton" onClick={handleClick}> Select A Different Image</button>
+        <button className="uploadButton" onClick={handleCancel}> Cancel</button>
+        </div>
+       
+
       </div>
 
     </>
