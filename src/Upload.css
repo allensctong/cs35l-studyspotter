@@ -51,6 +51,9 @@ body {
 .read-the-docs {
   color: #888;
 }
+.input-container{
+  margin-top: 20px;
+}
 
 .uploadButton {
   background-color: #61C1BF; /* Teal as per the logo accent */
@@ -61,27 +64,18 @@ body {
   padding: 8px 15px;
   transition: background-color 0.3s, color 0.3s, transform 0.2s;
   margin-top: 20px;
-}
-.setProfileButton{
-  background-color: #61C1BF; /* Teal as per the logo accent */
-  color: #ffffff;
-  cursor: pointer;
-  border: none;
-  border-radius: 5px;
-  padding: 8px 15px;
-  transition: background-color 0.3s, color 0.3s, transform 0.2s;
   margin-left: 20px;
-  margin-top: 20px;
-  
 }
 
+
 .image-preview-container {
-  display: flex;
+  /*display: flex;
   flex-wrap: wrap;
   gap: 10px;
   margin-top: 20px;
-  justify-content: center;
-  align-items: center;
+  justify-content: center;*/
+  border: none;
+  
 
 }
 
@@ -91,4 +85,19 @@ body {
   margin-top:10px;
 
 
+}
+
+
+
+.add-button {
+    
+    
+    width: 300px;
+    height: 300px;
+    border: 2px dashed #ccc;
+    /*display: flex;*/
+    
+   
+    overflow: hidden;
+  
 }
