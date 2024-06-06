@@ -28,7 +28,25 @@ function Login() {
 	function handleChangePassword(Event) {
 		setPassword(Event.target.value);
 	}
+
+	function handleEnteringPassword(Event) {
+        const invalidChars = /[:~` ]/; // can add to this
+        if (invalidChars.test(Event.key)) {
+			// listen to the keys pressed on the keyboard and escape invalidchars
+            Event.preventDefault();
+			alert("Invalid characters entered!");
+        }
+    }
+
+	function handleChangeVerifyPassword(event) {
+        setVerifyPassword(event.target.value);
+    }
+
 	async function handleLogin() {
+		if (username==='' || password==='') {
+			alert("User name or password not enetered!");
+		}
+
 		let response = await fetch("http://localhost:8080/api/login", {
 			method: 'POST',
 			headers: {
@@ -49,6 +67,15 @@ function Login() {
 	}
 
 	async function handleSignup() {
+		if (username==='' || password==='' || verifyPassword==='') {
+			alert("Username or password not enetered!");
+		}
+
+		if (password !== verifyPassword){
+			alert("The passwords you entered don't match, try again!")
+			return;
+		}
+		console.log("sign up successful") //remove for debugging
 		let response = await fetch("http://localhost:8080/api/signup", {
 			method: 'POST',
 			headers: {
@@ -82,10 +109,37 @@ function Login() {
 			</div>
 			<div>
 				<form onSubmit={onSubmit}>
-					Username: <input name="Username" value={username} onChange={handleChangeUsername} /><br/>
-					Password: <input name="Password" value={password} onChange={handleChangePassword} /><br />
-					<button type="Submit" onClick={handleLogin}>Login</button><br />
-					<button type="Submit" onClick={handleSignup}>Create Account</button>
+					<label>
+					Username: <input name="Username" value={username} onChange={handleChangeUsername} />
+					</label>
+					<br/>
+					<label>
+					Password: <input name="Password" type='password' value={password} onChange={handleChangePassword} onKeyDown={handleEnteringPassword} />
+					</label>
+					<br/>
+					{isSigningUp && (
+						<>
+						<label>
+							Verify Password:
+							<input
+								name="VerifyPassword"
+								type="password"
+								value={verifyPassword}
+								onChange={handleChangeVerifyPassword}
+								onKeyDown={handleEnteringPassword}
+							/>
+						</label>
+						<br />
+						<button type="button" onClick={handleSignup}>Submit</button>
+					</>
+					)}
+					{!isSigningUp && (
+						<>
+							<button type="Submit" onClick={handleLogin}>Login</button><br />
+							<button type="Submit" onClick={() => setIsSigningUp(true)}>Create Account</button>
+						</>
+					)}
+					
 				</form>
 			</div>
 		</>
