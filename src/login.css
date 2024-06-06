@@ -89,6 +89,11 @@ button:hover {
     transform: scale(1.05);
 }
 
+span{
+    font-size: xx-small;
+    font-weight: 800;
+}
+
 @media (max-width: 768px) {
     form {
         width: 90%;
