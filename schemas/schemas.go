@@ -1,7 +1,7 @@
 package schemas
 
 import (
-	"time"
+//	"time"
 )
 
 //POST/GET FOR SIGNUP/LOGIN
@@ -22,26 +22,30 @@ type UploadPfp struct {
 	Username string `json: "username"`
 	//ProfilePicture 
 }
+type Comment struct {
+	Username string `json: "username"`
+	Text string `json: "comment"`
+}
 
 //GET FROM MAIN/USER PAGE
 type Post struct {
+	ID int `json:"post_id"`
 	Username string `json:"username"`
-	//Image 
+	ImagePath string `json:"image_src"` 
 	Caption string `json:"caption"`
-	//Comments # a dictionary or a similar structure with usernames as keys and their corresponding comments as values 
-	LikeCount int `json:"like_count"`
-	LikeByUser bool `json:"liked_by_user"`
-	LikedUserList []string `json:"liked_by_user"`
-	UploadTime time.Time `json:"uploadtime"`
+	LikeCount int `json:"likes"`
+	LikedUserList []string `json:"liked_users"`
+	Comments []Comment `json:"comments"`
 }
 
 //GET FROM USER PAGE
 type UserProfile struct {
 	Username string `json:"username"`
-	IsUsername bool   `json:"isusername"`
 	Bio string `json:"bio"`
-	Following int `json:"following"`
-	Followers int `json:"followers"`
-	ProfilePicture Image
-	//Posts []Post `json: "posts"`
+	FollowingCount int `json:"following_count"`
+	Following []string `json:"following"`
+	FollowersCount int `json:"followers_count"`
+	Followers []string `json:"follower"`
+	ProfilePicture string `json:"pfp"`
+	Posts []string `json:"posts"`
 }

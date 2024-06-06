@@ -11,15 +11,18 @@ function getCookieValue(name)
    }
 
 // we can see what the backend db is storing, but we should pass the loggedIn user ids, profile id, etc. in here 
-function ProfilePage ({username = ''}) {
+function ProfilePage () {
     const [followerCount, setFollowerCount] = useState(0);
     const [followingCount, setFollowingCount] = useState(0);
     const [isFriend, setIsFriend] = useState(false);
     const [isUser, setIsUser] = useState(true); 
     const [profileName, setProfileName] = useState('');
     const [profileBio, setProfileBio] = useState('');
+    const [pfpSrc, setPfpSrc] = useState("http://localhost:8080/assets/default-pfp.jpg");
+    const [postSrcs, setPostSrcs] = useState([]);
     const [isEditingBio, setIsEditingBio] = useState(false);
     const [newBio, setNewBio] = useState('');
+    const params = new URL(window.location.href).searchParams;
     
     //call the first time the page is rendered
     useEffect(() => {
@@ -31,15 +34,22 @@ function ProfilePage ({username = ''}) {
     async function getUserInfo() {
       //if input is default get username from cookie
       const curUser = getCookieValue('Username');
-      if (username === "") {
+      var username = params.get('u');
+      if (!username) {
         setProfileName(curUser);
-	username = curUser;
+        username = curUser;
       } else {
         setProfileName(username);
       }
       
       //fetch profile info
-      let response = await fetch('http://localhost:8080/api/user/' + username);
+      let response = await fetch('http://localhost:8080/api/user/' + username, {
+        credentials: 'include',
+      });
+      if (await response.status == 401) {
+        window.location.href = 'login';
+        return;
+      }
       if (await response.status !== 200) {
         //TODO handle error
         alert('ERROR');
@@ -50,9 +60,11 @@ function ProfilePage ({username = ''}) {
       
       response = await response.json();
       setProfileBio(response.bio);
+      setPfpSrc(response.pfp);
+      setPostSrcs(response.posts);
+      setIsUser(username === curUser);
       setFollowerCount(response.followers);
       setFollowingCount(response.following);
-
     }
 
     const handleAddFriend = () => {
@@ -69,14 +81,14 @@ function ProfilePage ({username = ''}) {
         setNewBio(bio.target.value);
     };
 
-    // Not sure if fetch request is in proper format
     const handleSubmitBio = async () => {
-        let response = await fetch('http://localhost:8080/api/user/' + username, {
+        let response = await fetch('http://localhost:8080/api/user/' + profileName + '/bio', {
             method: 'PUT',
+            credentials: 'include',
             headers: {
-                'Content-Type': 'application/json'
+                'content-type': 'application/json'
             },
-            body: JSON.stringify({ bio: newBio })
+            body: JSON.stringify({ 'bio': newBio }),
         });
         
         if (await response.status === 200) {
@@ -94,16 +106,17 @@ function ProfilePage ({username = ''}) {
     return (
         <div>
             <div className="top-bar">
-                <a href="/main" class="logo-link">
+                <a href="/main" className="logo-link">
                     <img src="SSlogo.png" className="logo" alt="Logo" />
                 </a>
             </div>
             <div className="profile-container">
                 <div className="profile-header">
-                    <div className="profile-picture">
+                    <div className="profile-picture" src={pfpSrc}>
+                    	<img className="profile-picture" src={pfpSrc} />
                         {isUser && (
-                            <a href="/pfp" class="edit-profile-link">
-                                <img src="../pencil.png" alt="Edit Profile" class="pencil-icon" />
+                            <a href="/pfp" className="edit-profile-link">
+                                <img src="../pencil.png" alt="Edit Profile" className="pencil-icon" />
                             </a>
                         )}
                     </div>
@@ -130,11 +143,9 @@ function ProfilePage ({username = ''}) {
                             <a href="upload" className="add-button">+</a>
                         </div>
                     )}
-                    <div className="photo"></div>
-                    <div className="photo"></div>
-                    <div className="photo"></div>
-                    <div className="photo"></div>
-                    <div className="photo"></div>
+                    {postSrcs.map((element, index) => (
+                        <img className="photo" src={element} key={index}/>
+                    ))}
                 </div>
             </div>
             {isEditingBio && (
@@ -147,7 +158,7 @@ function ProfilePage ({username = ''}) {
                             onChange={handleBioChange} 
                             rows="4" 
                             cols="50"
-                        />
+                        /> 
                         <button onClick={handleSubmitBio}>Submit</button>
                     </div>
                 </div>

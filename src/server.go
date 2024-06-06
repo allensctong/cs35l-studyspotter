@@ -2,41 +2,18 @@ package src
 
 import (
 	"fmt"
-	"log"
+	"strconv"
 	"net/http"
 	"database/sql"
+	"path/filepath"
 
 	"studyspotter/schemas"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 )
 
-func GetUsersWrapper(db *sql.DB) gin.HandlerFunc {
-	GetUsers := func (c *gin.Context) {
-		var users = []schemas.Login{}
-		var username string
-		var password string
-
-		rows, err := db.Query("SELECT username, password FROM user")
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer rows.Close()
-
-		for rows.Next() {
-			if err := rows.Scan(&username, &password); err != nil {
-				log.Fatal(err)
-			}
-			users = append(users, schemas.Login{username, password})
-		}
-
-		if err := rows.Err(); err != nil {
-			log.Fatal(err)
-		}
-		c.IndentedJSON(http.StatusOK, users)	
-	}
-	return GetUsers
-}
+var LocalAssetsPath string = "assets/" 
+var HostAddress string = "http://localhost:8080/"
 
 //Get User Profile (GET FOR USER PAGE)
 func GetUserWrapper(db *sql.DB) gin.HandlerFunc {
@@ -51,7 +28,6 @@ func GetUserWrapper(db *sql.DB) gin.HandlerFunc {
 		}
 
 		c.IndentedJSON(http.StatusNotFound, gin.H{"message": "user not found"})
-		
 	}
 
 	return GetUser
@@ -65,28 +41,16 @@ func CreateUserWrapper(db *sql.DB) gin.HandlerFunc {
 		if err := c.BindJSON(&user); err != nil {
 			panic(err)
 		}
-		username := user.Username
-		password := user.Password
-		//query database for user
-		if hasUser := DBHasUser(db, username); hasUser {
-			//if user already exists
-			c.JSON(http.StatusBadRequest, gin.H{"message": "user already exists!"})
+
+		//try to add user to database
+		if madeUser := DBCreateUserProfile(db, user); madeUser {
+			//if user successfully created
+			c.JSON(http.StatusCreated, gin.H{})
 			return
 		}
-
-		//hash password
-		hashBytes, err := bcrypt.GenerateFromPassword([]byte(password), 12)
-		if err != nil {
-			return
-		}
-
-		passwordHash := string(hashBytes)
-
-		//create new user
-		db.Exec(`INSERT INTO user (username, password, following, followers, bio) VALUES (?, ?, 0, 0, "");`, username, passwordHash)
 		
 		//send response back to client
-		c.IndentedJSON(http.StatusCreated, gin.H{})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "user already exists!"})
 	}
 
 	return CreateUser
@@ -126,32 +90,166 @@ func LoginWrapper(db *sql.DB) gin.HandlerFunc {
 	return Login
 }
 
-func PostWrapper(db *sql.DB) gin.HandlerFunc {
-	Post := func (c *gin.Context) {
-//		var incomingPost schemas.Post
-		file, err := c.FormFile("image")
+func CreatePostWrapper(db *sql.DB) gin.HandlerFunc {
+	createPost := func (c *gin.Context) {
+		var post schemas.Post
+		image, err := c.FormFile("image")
 		if err != nil {
 			panic(err)
 		}
-		fmt.Println(file.Filename)
-		caption, _ := c.GetPostForm("caption")
-		username, _ := c.GetPostForm("username")
-		fmt.Println(caption)
-		fmt.Println(username)
+		post.Caption, _ = c.GetPostForm("caption")
+		post.Username, _ = c.GetPostForm("username")
+		//get current number of posts and save image to image directory
+		var postCount int
+		err = db.QueryRow("SELECT COUNT(*) FROM post").Scan(&postCount)
+		imagePath := LocalAssetsPath + strconv.Itoa(postCount) + filepath.Ext(image.Filename)
+		err = c.SaveUploadedFile(image, imagePath)
+		if err != nil {
+			fmt.Println(err)
+			c.JSON(http.StatusBadRequest, gin.H{"message": "error with upload"})
+		}
+		post.ImagePath = HostAddress + imagePath
+		post.ID = postCount
 
-		err = c.SaveUploadedFile(file, "data/"+file.Filename)
+		//create Post
+		DBCreatePost(db, post)
+
+		c.JSON(http.StatusOK, gin.H{})
+	}
+	return createPost
+}
+
+func ChangePfpWrapper(db *sql.DB) gin.HandlerFunc {
+	changePfp := func (c *gin.Context) {
+		username, _ := c.GetPostForm("username")
+		newPfp, err := c.FormFile("image")
+		if err != nil {
+			panic(err)
+		}
+		pfpPath := LocalAssetsPath + "pfp" + username + filepath.Ext(newPfp.Filename)
+		err = c.SaveUploadedFile(newPfp, pfpPath)
+		_, err = db.Exec("UPDATE user SET pfp=? WHERE username=?;", HostAddress + pfpPath, username)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"message": "error with upload"})
 		}
+		
 		c.JSON(http.StatusOK, gin.H{})
-	}
-	return Post
+	}	
+
+	return changePfp
 }
+
+func ChangeBioWrapper(db *sql.DB) gin.HandlerFunc {
+	changeBio := func (c *gin.Context) {
+		type bioBody struct {
+			NewBio string `json:"bio"`
+		}
+		var inc bioBody
+		username := c.Param("username")
+		err := c.BindJSON(&inc)
+		if err != nil {
+			panic(err)
+			c.JSON(http.StatusBadRequest, gin.H{"message": "error with change"})
+		}
+		_, err = db.Exec("UPDATE user SET bio=? WHERE username=?;", inc.NewBio, username)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"message": "error with upload"})
+		}
+		
+		c.JSON(http.StatusOK, gin.H{})
+	}	
+
+	return changeBio
+}
+
+func SearchUsersWrapper(db *sql.DB) gin.HandlerFunc {
+	searchUsers := func (c *gin.Context) {
+		query := c.Param("query")
+		usernamesInSearch := []string{}
+		query = "%" + query + "%"
+		rows, err := db.Query("SELECT username FROM user WHERE username LIKE ? ORDER BY username;", query)
+		if err != nil {
+			panic(err)
+			c.JSON(http.StatusBadRequest, gin.H{"message": "error with query"})
+		}
+		defer rows.Close()
+		for rows.Next() {
+			var username string
+			rows.Scan(&username)
+			usernamesInSearch = append(usernamesInSearch, username)
+		}
+
+		usersInSearch := []schemas.UserProfile{}
+		for _, username := range usernamesInSearch {
+			user := DBGetUserProfile(db, username)
+			usersInSearch = append(usersInSearch, user)
+		}
+		c.JSON(http.StatusOK, usersInSearch)
+	}
+
+	return searchUsers
+} 
+
+func GetPostsWrapper(db *sql.DB) gin.HandlerFunc {
+	getPosts := func (c *gin.Context) {
+		ids := []int{}
+		rows, err := db.Query("SELECT id FROM post ORDER BY uploadtime DESC;")
+		if err != nil {
+			panic(err)
+		}
+		defer rows.Close()
+		for rows.Next() {
+			var id int
+			rows.Scan(&id)
+			ids = append(ids, id)
+		}
+
+		posts := []schemas.Post{}
+		for _, id := range ids {
+			post := DBGetPost(db, id)
+			posts = append(posts, post)
+		}
+		c.JSON(http.StatusOK, posts)
+	}
+	return getPosts
+}
+
+//TODO
+func CommentWrapper(db *sql.DB) gin.HandlerFunc {
+	commentF := func (c *gin.Context) {
+		id := c.Param("id")
+		var comment schemas.Comment
+		err := c.BindJSON(&comment)
+		if err != nil {
+			panic(err)
+		}
+
+		_, err = db.Exec(fmt.Sprintf("INSERT INTO comment%d (username, comment) VALUES ('%s', '%s');", id, comment.Username, comment.Text))
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"message": "error with comment"})
+			panic(err)
+		}
+
+		c.JSON(http.StatusOK, comment)
+
+	}
+	return commentF
+}
+
+// func GetLikeWrapper(db *sql.DB) gin.HandlerFunc {
+// 	getLike := func (c *gin.Context) {
+// 		id := c.Param("id")
+
+// 	}
+// 	return getLike
+// }
+
+/* ---------------------------MIDDLWARE FUNCTIONS--------------------------- */
 
 func CORSMiddleware() gin.HandlerFunc {
     return func(c *gin.Context) {
-	c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
-	c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
+		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
         c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
         c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
         if c.Request.Method == "OPTIONS" {
@@ -161,12 +259,6 @@ func CORSMiddleware() gin.HandlerFunc {
 
         c.Next()
     }
-}
-
-/* ---------------------------HELPER FUNCTIONS--------------------------- */
-func CheckPasswordHash(password, hash string) bool {
-	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
-	return err == nil
 }
 
 func AuthRequired(c *gin.Context) {
@@ -182,7 +274,12 @@ func AuthRequired(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{})
 		return
 	}
-	fmt.Printf("%s\n", tokenString)
 
 	c.Next()
+}
+
+/* ---------------------------HELPER FUNCTIONS--------------------------- */
+func CheckPasswordHash(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
 }

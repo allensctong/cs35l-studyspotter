@@ -44,7 +44,7 @@ function Upload() {
       formData.append('username', getCookieValue('Username'));
       formData.append('image', selectedImage);
       // Need to edit fetch request
-      let response = await fetch('http://localhost:8080/api/user/' + getCookieValue('Username'), {
+      let response = await fetch('http://localhost:8080/api/user/' + getCookieValue('Username') + '/pfp', {
         method: 'PUT',
         credentials: 'include',
         body: formData,
