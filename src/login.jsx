@@ -19,7 +19,7 @@ function Login() {
 	}
 
 	function handleEnteringPassword(Event) {
-        const invalidChars = /[:~` ]/; // can add to this
+        const invalidChars = /[:;~` ]/; // can add to this
         if (invalidChars.test(Event.key)) {
 			// listen to the keys pressed on the keyboard and escape invalidchars
             Event.preventDefault();
@@ -48,6 +48,7 @@ function Login() {
 			}),
 		}
 		);
+
 		if(await response.status !== 200) {
 			alert("Login failed!");
 			return;
@@ -59,6 +60,22 @@ function Login() {
 		if (username==='' || password==='' || verifyPassword==='') {
 			alert("Username or password not enetered!");
 		}
+		
+		if (username.length < 6) {
+            alert("Username must be at least 6 characters long!");
+            return;
+        }
+
+        if (password.length < 8 || password.length > 20) {
+            alert("Password must be between 8 and 20 characters long!");
+            return;
+        }
+
+        const passwordPattern = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+={}\[\]<>?/|\\]).{8,20}$/;
+        if (!passwordPattern.test(password)) {
+            alert("Password must contain at least one uppercase letter, one number, and one special character!");
+            return;
+        }
 
 		if (password !== verifyPassword){
 			alert("The passwords you entered don't match, try again!")
@@ -79,31 +96,34 @@ function Login() {
 		);
 
 		if(await response.status !== 201) {
-			alert("OHNOES");
+			alert("Sign up Failed!");
 			return;
-    } else {
-			alert("poggers");
+		} else {
+			alert("Account created!");
 			return;
 		}
 	}
 
 	const onSubmit = (e) => {
 		e.preventDefault();
-    console.log("refresh prevented");
+    	console.log("refresh prevented");
   };
 	return (
-		<>
-			<div>
+		<div className='loginContainer'>
+			<div className="logo-container">
 				<img src={studySpotLogo} className="logo" alt="Study Spotter Logo"/>
 			</div>
-			<div>
+			<div className='form-container'>
 				<form onSubmit={onSubmit}>
 					<label>
 					Username: <input name="Username" value={username} onChange={handleChangeUsername} />
 					</label>
 					<br/>
 					<label>
-					Password: <input name="Password" type='password' value={password} onChange={handleChangePassword} onKeyDown={handleEnteringPassword} />
+					Password: 
+					<br></br>
+					<span>Please limit to 8-20 characters, include at least one uppercase letter, one number, and one special character</span>
+					<input name="Password" type='password' value={password} onChange={handleChangePassword} onKeyDown={handleEnteringPassword} />
 					</label>
 					<br/>
 					{isSigningUp && (
@@ -131,7 +151,7 @@ function Login() {
 					
 				</form>
 			</div>
-		</>
+		</div>
 	)
 }
 
