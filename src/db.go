@@ -89,6 +89,16 @@ func DBGetUserProfile(db *sql.DB, username string) schemas.UserProfile {
 		panic(err)
 	}
 
+	//get images for posts
+	user.Posts = []string{}
+	imageRows, err := db.Query("SELECT imagePath FROM post WHERE username=?", user.Username)
+	defer imageRows.Close()
+	for imageRows.Next() {
+		var post string
+		imageRows.Scan(&post)
+		user.Posts = append(user.Posts, post)
+	}
+
 	return user
 	
 }
@@ -119,7 +129,11 @@ func DBCreateUserProfile(db *sql.DB, user schemas.Login) bool {
 }
 
 func DBCreatePost(db *sql.DB, post schemas.Post) bool {
-	_, err := db.Exec(`INSERT INTO post (id, username, imagepath, caption) VALUES (?, ?);`, post.ID, post.Username, post.ImagePath, post.Caption)
+	_, err := db.Exec(`INSERT INTO post (id, username, imagepath, caption) VALUES (?, ?, ?, ?);`, post.ID, post.Username, post.ImagePath, post.Caption)
+	if err != nil {
+		panic(err)
+		return false
+	}
 
 	_, err = db.Exec(fmt.Sprintf("CREATE TABLE comment%s (username VARCHAR(255) NOT NULL, comment TEXT DEFAULT '', commenttime TIMESTAMP DEFAULT CURRENT_);", strconv.Itoa(post.ID)))
 	_, err = db.Exec(fmt.Sprintf("CREATE TABLE likes%s (username VARCHAR(255));", strconv.Itoa(post.ID)))

@@ -31,9 +31,11 @@ func main() {
 	authorized := router.Group("/", src.AuthRequired)
 	authorized.GET("api/user/:username", src.GetUserWrapper(db))
 	authorized.GET("api/user/search/:query", src.SearchUsersWrapper(db))
-//	authorized.PUT("api/user/:username/bio", src.ChangeBioWrapper(db))
+	authorized.PUT("api/user/:username/bio", src.ChangeBioWrapper(db))
 	authorized.PUT("api/user/:username/pfp", src.ChangePfpWrapper(db))
 	authorized.POST("api/post", src.CreatePostWrapper(db))
+//	authorized.PUT("api/post/:id/comment", src.CreatePostWrapper(db))
+//	authorized.PUT("api/post/:id/like", src.CreatePostWrapper(db))
 //	authorized.GET("api/post", src.GetPostWrapper(db))
 
 	//unauthorized endpoints (anyone can call)

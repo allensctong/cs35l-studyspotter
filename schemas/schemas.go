@@ -47,4 +47,5 @@ type UserProfile struct {
 	FollowersCount int `json:"followers_count"`
 	Followers []string `json:"follower"`
 	ProfilePicture string `json:"pfp"`
+	Posts []string `json:"posts"`
 }

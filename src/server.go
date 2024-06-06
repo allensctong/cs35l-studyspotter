@@ -139,6 +139,29 @@ func ChangePfpWrapper(db *sql.DB) gin.HandlerFunc {
 	return changePfp
 }
 
+func ChangeBioWrapper(db *sql.DB) gin.HandlerFunc {
+	changeBio := func (c *gin.Context) {
+		type bioBody struct {
+			NewBio string `json:"bio"`
+		}
+		var inc bioBody
+		username := c.Param("username")
+		err := c.BindJSON(&inc)
+		if err != nil {
+			panic(err)
+			c.JSON(http.StatusBadRequest, gin.H{"message": "error with change"})
+		}
+		_, err = db.Exec("UPDATE user SET bio=? WHERE username=?;", inc.NewBio, username)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"message": "error with upload"})
+		}
+		
+		c.JSON(http.StatusOK, gin.H{})
+	}	
+
+	return changeBio
+}
+
 func SearchUsersWrapper(db *sql.DB) gin.HandlerFunc {
 	searchUsers := func (c *gin.Context) {
 		query := c.Param("query")

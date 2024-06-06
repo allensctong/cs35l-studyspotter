@@ -94,10 +94,12 @@ const App = () => {
           {isDropdownVisible && searchResults.length > 0 && (
             <div className="search-results">
               {searchResults.map((user, index) => (
-                <div className="search-result-item" key={index}>
-                  <img src={user.pfp} alt={`${user.username}'s profile`} className="profile-picture" />
-                  <span style={{ color: 'black' }}>{user.username}</span>
-                </div>
+                <a href={`http://localhost:5173/user?u=${user.username}`}  key={index}>
+                  <div className="search-result-item">
+                    <img src={user.pfp} alt={`${user.username}'s profile`} className="profile-picture" />
+                    <span style={{ color: 'black' }}>{user.username}</span>
+                  </div>
+                </a>
               ))}
             </div>
           )}

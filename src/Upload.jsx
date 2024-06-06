@@ -11,8 +11,6 @@ function getCookieValue(name)
       }
    }
 
-
-
 function Upload() {
   const [userInput, setUserInput]=useState('');
   const[selectedImage, setSelectedImage]=useState(null);
@@ -117,7 +115,7 @@ function Upload() {
     alert("Upload failed!");
     return;
   }
-  window.location.href = "../uploadSuccess.html";
+  window.location.href = "/uploaded";
   };
 
   const handleProfile=()=>{
