@@ -16,20 +16,20 @@ const App = () => {
       .then(response => response.json())
       .then(data => setPosts(data))
       .catch(error => console.error('Error fetching posts:', error));
-
-    fetch('/users.json')
-      .then(response => response.json())
-      .then(data => setUsers(data))
-      .catch(error => console.error('Error fetching users:', error));
-  }, []);
+    }, []);
 
   const handleSearch = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
 
     if (query.length > 0) {
-      const results = users.filter(user => user.username.toLowerCase().includes(query.toLowerCase()));
-      setSearchResults(results);
+      fetch('http://localhost:8080/api/user/search/' + query, {
+        credentials: 'include',
+      })
+        .then(response => response.json())
+        .then(data => setUsers(data))
+        .catch(error => console.error('Error fetching users:', error));
+      setSearchResults(users);
       setIsDropdownVisible(true);
     } else {
       setSearchResults([]);
@@ -86,7 +86,7 @@ const App = () => {
             <div className="search-results">
               {searchResults.map((user, index) => (
                 <div className="search-result-item" key={index}>
-                  <img src={user.profilePicture} alt={`${user.username}'s profile`} className="profile-picture" />
+                  <img src={user.pfp} alt={`${user.username}'s profile`} className="profile-picture" />
                   <span style={{ color: 'black' }}>{user.username}</span>
                 </div>
               ))}
@@ -102,8 +102,8 @@ const App = () => {
       <div className="content">
         {posts.map((post, index) => (
           <div className="post" key={index}>
-            <div className="uploader">{post.uploader}</div>
-            <img src={post.imgSrc} alt="Post" />
+            <div className="uploader">{post.user}</div>
+            <img src={post.image_src} alt="Post" />
             <div className="buttons">
               <button onClick={() => likePost(index)}>
                 <FontAwesomeIcon icon={post.liked ? faHeart : faHeartEmpty} /> Like <span className="like-count">{post.likes}</span>

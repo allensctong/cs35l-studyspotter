@@ -63,8 +63,8 @@ func DBGetUserProfile(db *sql.DB, username string) schemas.UserProfile {
 	}
 	
 	//get follower/following counts (TODO MAKE THIS A HELPER FUNC AND USE GOROUTINE)
-	err = db.QueryRow(fmt.Sprintf("SELECT COUNT(*) FROM %sfollowing", user.Username)).Scan(&user.FollowingCount)
-	followingRows, err := db.Query(fmt.Sprintf("SELECT username FROM %sfollowing", user.Username))
+	err = db.QueryRow(fmt.Sprintf("SELECT COUNT(*) FROM following%s", user.Username)).Scan(&user.FollowingCount)
+	followingRows, err := db.Query(fmt.Sprintf("SELECT username FROM following%s", user.Username))
 	defer followingRows.Close()
 	user.Following = []string{}
 	for followingRows.Next() {
@@ -76,8 +76,8 @@ func DBGetUserProfile(db *sql.DB, username string) schemas.UserProfile {
 		panic(err)
 	}
 
-	err = db.QueryRow(fmt.Sprintf("SELECT COUNT(*) FROM %sfollowers", user.Username)).Scan(&user.FollowersCount)
-	rows, err := db.Query(fmt.Sprintf("SELECT username FROM %sfollowers", user.Username))
+	err = db.QueryRow(fmt.Sprintf("SELECT COUNT(*) FROM followers%s", user.Username)).Scan(&user.FollowersCount)
+	rows, err := db.Query(fmt.Sprintf("SELECT username FROM followers%s", user.Username))
 	defer rows.Close()
 	user.Followers = []string{}
 	for rows.Next() {

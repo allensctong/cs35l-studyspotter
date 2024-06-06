@@ -22,6 +22,10 @@ type UploadPfp struct {
 	Username string `json: "username"`
 	//ProfilePicture 
 }
+type Comment struct {
+	Username string `json: "username"`
+	Text string `json: "comment"`
+}
 
 //GET FROM MAIN/USER PAGE
 type Post struct {
@@ -29,9 +33,9 @@ type Post struct {
 	Username string `json:"username"`
 	ImagePath string `json:"image_src"` 
 	Caption string `json:"caption"`
-	LikeCount int `json:"like_count"`
-	LikeByUser bool `json:"liked_by_user"`
-	LikedUserList []string `json:"liked_by_user"`
+	LikeCount int `json:"likes"`
+	LikedUserList []string `json:"liked_users"`
+	Comments []Comment `json:"comments"`
 }
 
 //GET FROM USER PAGE

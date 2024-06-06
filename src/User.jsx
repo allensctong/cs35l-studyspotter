@@ -18,6 +18,7 @@ function ProfilePage ({username = ''}) {
     const [isUser, setIsUser] = useState(true); 
     const [profileName, setProfileName] = useState('');
     const [profileBio, setProfileBio] = useState('');
+    const [pfpSrc, setPfpSrc] = useState("http://localhost:8080/assets/default-pfp.jpg");
     
     //call the first time the page is rendered
     useEffect(() => {
@@ -52,10 +53,11 @@ function ProfilePage ({username = ''}) {
       
       response = await response.json();
       setProfileBio(response.bio);
+      setPfpSrc(response.pfp);
+      console.log(response.pfp);
       setIsUser(username === curUser);
       setFollowerCount(response.followers);
       setFollowingCount(response.following);
-
     }
 
     const handleAddFriend = () => {
@@ -66,13 +68,13 @@ function ProfilePage ({username = ''}) {
     return (
         <div>
             <div className="top-bar">
-                <a href="/main" class="logo-link">
+                <a href="/main" className="logo-link">
                     <img src="SSlogo.png" className="logo" alt="Logo" />
                 </a>
             </div>
             <div className="profile-container">
                 <div className="profile-header">
-                    <img className="profile-picture" src="http://localhost:8080/assets/default-pfp.jpg" width={250} height={250} />
+                    <img className="profile-picture" src={pfpSrc} width={250} height={250} />
                     <div className="profile-info">
                         <h1> {profileName} </h1>
                         <p> {profileBio} </p>
