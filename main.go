@@ -31,7 +31,7 @@ func main() {
 	authorized := router.Group("/", src.AuthRequired)
 	authorized.GET("api/user/:username", src.GetUserWrapper(db))
 	authorized.GET("api/user/search/:query", src.SearchUsersWrapper(db))
-	authorized.PUT("api/user/:username/bio", src.ChangePfpWrapper(db))
+//	authorized.PUT("api/user/:username/bio", src.ChangeBioWrapper(db))
 	authorized.PUT("api/user/:username/pfp", src.ChangePfpWrapper(db))
 	authorized.POST("api/post", src.CreatePostWrapper(db))
 //	authorized.GET("api/post", src.GetPostWrapper(db))
