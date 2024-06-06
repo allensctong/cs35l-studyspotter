@@ -127,7 +127,7 @@ function ProfilePage () {
                             <span id="follower-count">Followers: {followerCount}</span> |
                             <span id="following-count"> Following: {followingCount}</span>
                         </div>
-                        {isUser && (
+                        {!isUser && (
                             <button id="friend-button" 
                                 className={isFriend ? 'unadd-friend' : 'add-friend'}
                                 onClick={handleAddFriend}>
