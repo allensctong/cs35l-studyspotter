@@ -11,6 +11,7 @@ export default defineConfig({
 				login: 'login.html',
 				main: 'main.html',
 				upload: 'upload.html'
+				/*upload success: 'uploadSuccess.html' */
 			}
 		}
 	}
