@@ -92,11 +92,11 @@ function Login() {
     console.log("refresh prevented");
   };
 	return (
-		<>
-			<div>
+		<div className='loginContainer'>
+			<div className="logo-container">
 				<img src={studySpotLogo} className="logo" alt="Study Spotter Logo"/>
 			</div>
-			<div>
+			<div className='form-container'>
 				<form onSubmit={onSubmit}>
 					<label>
 					Username: <input name="Username" value={username} onChange={handleChangeUsername} />
@@ -131,7 +131,7 @@ function Login() {
 					
 				</form>
 			</div>
-		</>
+		</div>
 	)
 }
 
