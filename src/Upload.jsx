@@ -22,9 +22,8 @@ function Upload() {
   const[postWidth, setPostWidth]=useState(0);
   const[postHeight, setPostHeight]=useState(0);
 
-  const imgDimension={width: 1024, height:768 };
-  const profileDimension={width: 320, height:320};
-
+  const imgDimension={width: 1024/2, height:768/2 };
+ 
   const hiddenFileInput=useRef(null);
 
   const handleClick=(Event)=>{
