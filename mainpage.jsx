@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './style_specific_mint.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart, faComment, faUser, faSearch } from '@fortawesome/free-solid-svg-icons';
-import { faHeart as faHeartEmpty} from '@fortawesome/free-regular-svg-icons';
+import { faHeart as faHeartEmpty } from '@fortawesome/free-regular-svg-icons';
 
 const App = () => {
   const [posts, setPosts] = useState([]);
@@ -68,10 +68,19 @@ const App = () => {
     }
   };
 
+  const deleteAllCookies = () => {
+    document.cookie.split(';').forEach(cookie => {
+      const eqPos = cookie.indexOf('=');
+      const name = eqPos > -1 ? cookie.substring(0, eqPos) : cookie;
+      document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    });
+    window.location.href = '/';
+  };
+
   return (
     <div>
       <div className="header">
-        <img src="/SSlogo.png" alt="Study Spotter Logo" className="logo" onClick={() => window.location.reload()}/>
+        <img src="/SSlogo.png" alt="Study Spotter Logo" className="logo" onClick={() => window.location.reload()} />
         <form method="get" className="search-bar" onSubmit={handleSearchSubmit}>
           <input
             type="text"
@@ -96,6 +105,9 @@ const App = () => {
         <div className="right-buttons">
           <button onClick={() => window.location.href = 'http://localhost:5173/user'}>
             <FontAwesomeIcon icon={faUser} /> Profile
+          </button>
+          <button onClick={deleteAllCookies}>
+            Logout
           </button>
         </div>
       </div>
