@@ -18,6 +18,8 @@ function ProfilePage ({username = ''}) {
     const [isUser, setIsUser] = useState(true); 
     const [profileName, setProfileName] = useState('');
     const [profileBio, setProfileBio] = useState('');
+    const [isEditingBio, setIsEditingBio] = useState(false);
+    const [newBio, setNewBio] = useState('');
     
     //call the first time the page is rendered
     useEffect(() => {
@@ -35,7 +37,6 @@ function ProfilePage ({username = ''}) {
       } else {
         setProfileName(username);
       }
-      setIsUser(profileName === curUser);
       
       //fetch profile info
       let response = await fetch('http://localhost:8080/api/user/' + username);
@@ -44,6 +45,8 @@ function ProfilePage ({username = ''}) {
         alert('ERROR');
         return;
       }
+
+      setIsUser(username === curUser);
       
       response = await response.json();
       setProfileBio(response.bio);
@@ -57,6 +60,37 @@ function ProfilePage ({username = ''}) {
         this.classList.add("hideButton"); // not display hide button
     };
 
+    const handleEditBio = () => {
+        setIsEditingBio(true);
+        setNewBio(profileBio);
+    };
+
+    const handleBioChange = (bio) => {
+        setNewBio(bio.target.value);
+    };
+
+    // Not sure if fetch request is in proper format
+    const handleSubmitBio = async () => {
+        let response = await fetch('http://localhost:8080/api/user/' + username, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ bio: newBio })
+        });
+        
+        if (await response.status === 200) {
+            setProfileBio(newBio);
+            setIsEditingBio(false);
+        } else {
+            alert('ERROR');
+        }
+    };
+
+    const handleCloseModal = () => {
+        setIsEditingBio(false);
+    };
+
     return (
         <div>
             <div className="top-bar">
@@ -66,7 +100,13 @@ function ProfilePage ({username = ''}) {
             </div>
             <div className="profile-container">
                 <div className="profile-header">
-                    <div className="profile-picture"></div>
+                    <div className="profile-picture">
+                        {isUser && (
+                            <a href="/pfp" class="edit-profile-link">
+                                <img src="../pencil.png" alt="Edit Profile" class="pencil-icon" />
+                            </a>
+                        )}
+                    </div>
                     <div className="profile-info">
                         <h1> {profileName} </h1>
                         <p> {profileBio} </p>
@@ -74,10 +114,13 @@ function ProfilePage ({username = ''}) {
                             <span id="follower-count">Followers: {followerCount}</span> |
                             <span id="following-count"> Following: {followingCount}</span>
                         </div>
-                        {isUser && (
+                        {!isUser && (
                             <button id="friend-button" onClick={handleAddFriend}>
                                 {isFriend ? 'Unfriend' : 'Add Friend'}
                             </button>
+                        )}
+                        {isUser && (
+                            <button onClick={handleEditBio}>Edit Bio</button>
                         )}
                     </div>
                 </div>
@@ -94,6 +137,21 @@ function ProfilePage ({username = ''}) {
                     <div className="photo"></div>
                 </div>
             </div>
+            {isEditingBio && (
+                <div className="modal">
+                    <div className="modal-content">
+                        <span className="close-button" onClick={handleCloseModal}>&times;</span>
+                        <h2>Edit Bio</h2>
+                        <textarea 
+                            value={newBio} 
+                            onChange={handleBioChange} 
+                            rows="4" 
+                            cols="50"
+                        />
+                        <button onClick={handleSubmitBio}>Submit</button>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }

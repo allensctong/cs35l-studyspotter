@@ -10,8 +10,9 @@ export default defineConfig({
 				user: 'user.html',
 				login: 'login.html',
 				main: 'main.html',
-				upload: 'upload.html'
-				/*upload success: 'uploadSuccess.html' */
+				upload: 'upload.html',
+				pfp: 'pfp.html',
+				uploaded: 'uploaded.html'
 			}
 		}
 	}
