@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useRef} from 'react'
 import './Upload.css'
 
 function getCookieValue(name) 
@@ -10,6 +11,8 @@ function getCookieValue(name)
       }
    }
 
+
+
 function Upload() {
   const [userInput, setUserInput]=useState('');
   const[selectedImage, setSelectedImage]=useState(null);
@@ -18,13 +21,14 @@ function Upload() {
   const [profilePicture, setProfileImage]=useState(null);
   const[postWidth, setPostWidth]=useState(0);
   const[postHeight, setPostHeight]=useState(0);
-  const[profileWidth, setProfileWidth]=useState(0);
-  const[profileHeight, setProfileHeight]=useState(0);
 
-  const imgDimension={width: 1024, height:768 };
-  const profileDimension={width: 320, height:320};
+  const imgDimension={width: 1024/2, height:768/2 };
+ 
+  const hiddenFileInput=useRef(null);
 
-
+  const handleClick=(Event)=>{
+    hiddenFileInput.current.click();
+  }
   const handleInputChange= (Event)=> {
     setUserInput(Event.target.value);
   };
@@ -124,6 +128,10 @@ function Upload() {
     console.log("Profile Picture:", profilePicture);
   };
 
+  const handleCancel=()=>{
+    window.location.href = "../user.html";
+  }
+
  
  
 
@@ -131,20 +139,29 @@ function Upload() {
   return (
     <>
       <div>
-        <h1> Upload Page</h1>
-        <h2>Add Image:</h2>
+        <h1> Create Your Post!</h1>
+        <h2>Show off how YOU study:</h2>
+
+        {imageURL ? ( <img src={imageURL} width={postWidth} height={postHeight} alt="Selected" className="image-preview-container" />)
+        :
         
-        <input type="file" accept=".jpg,.jpeg,.png" onChange={handleImageChange} />
+       (<button className="add-button" onClick={handleClick}>Click to Add Your Image</button>)}
+        < input type="file" accept=".jpg,.jpeg,.png" onChange={handleImageChange} ref={hiddenFileInput} style={{display: 'none'}}/>
         {error && <p className="error-message">{error}</p>}
-        {imageURL && <img src={imageURL} width={postWidth} height={postHeight} alt="Selected" className="image-preview-container" />}
-       
+        
+        
         <div className="input-container">
         
           <label htmlFor="userInput">Caption (optional): </label>
           <input id="userInput" type="text" value={userInput} onChange={handleInputChange}></input>
         </div>
+        <div>
         <button className="uploadButton" onClick={handleUpload}> Upload</button>
-        <button className="setProfileButton" onClick={handleProfile}> Set as Profile Picture</button>
+        <button className="uploadButton" onClick={handleClick}> Select A Different Image</button>
+        <button className="uploadButton" onClick={handleCancel}> Cancel</button>
+        </div>
+       
+
       </div>
 
     </>
