@@ -170,7 +170,9 @@ func SearchUsersWrapper(db *sql.DB) gin.HandlerFunc {
 		rows, err := db.Query("SELECT username FROM user WHERE username LIKE ? ORDER BY username;", query)
 		if err != nil {
 			panic(err)
+			c.JSON(http.StatusBadRequest, gin.H{"message": "error with query"})
 		}
+		defer rows.Close()
 		for rows.Next() {
 			var username string
 			rows.Scan(&username)
@@ -188,10 +190,66 @@ func SearchUsersWrapper(db *sql.DB) gin.HandlerFunc {
 	return searchUsers
 } 
 
+func GetPostsWrapper(db *sql.DB) gin.HandlerFunc {
+	getPosts := func (c *gin.Context) {
+		ids := []int{}
+		rows, err := db.Query("SELECT id FROM post ORDER BY uploadtime DESC;")
+		if err != nil {
+			panic(err)
+		}
+		defer rows.Close()
+		for rows.Next() {
+			var id int
+			rows.Scan(&id)
+			ids = append(ids, id)
+		}
+
+		posts := []schemas.Post{}
+		for _, id := range ids {
+			post := DBGetPost(db, id)
+			posts = append(posts, post)
+		}
+		c.JSON(http.StatusOK, posts)
+	}
+	return getPosts
+}
+
+//TODO
+func CommentWrapper(db *sql.DB) gin.HandlerFunc {
+	commentF := func (c *gin.Context) {
+		id := c.Param("id")
+		var comment schemas.Comment
+		err := c.BindJSON(&comment)
+		if err != nil {
+			panic(err)
+		}
+
+		_, err = db.Exec(fmt.Sprintf("INSERT INTO comment%d (username, comment) VALUES ('%s', '%s');", id, comment.Username, comment.Text))
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"message": "error with comment"})
+			panic(err)
+		}
+
+		c.JSON(http.StatusOK, comment)
+
+	}
+	return commentF
+}
+
+// func GetLikeWrapper(db *sql.DB) gin.HandlerFunc {
+// 	getLike := func (c *gin.Context) {
+// 		id := c.Param("id")
+
+// 	}
+// 	return getLike
+// }
+
+/* ---------------------------MIDDLWARE FUNCTIONS--------------------------- */
+
 func CORSMiddleware() gin.HandlerFunc {
     return func(c *gin.Context) {
-	c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
-	c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
+		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
         c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
         c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
         if c.Request.Method == "OPTIONS" {
@@ -201,12 +259,6 @@ func CORSMiddleware() gin.HandlerFunc {
 
         c.Next()
     }
-}
-
-/* ---------------------------HELPER FUNCTIONS--------------------------- */
-func CheckPasswordHash(password, hash string) bool {
-	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
-	return err == nil
 }
 
 func AuthRequired(c *gin.Context) {
@@ -222,7 +274,12 @@ func AuthRequired(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{})
 		return
 	}
-	fmt.Printf("%s\n", tokenString)
 
 	c.Next()
+}
+
+/* ---------------------------HELPER FUNCTIONS--------------------------- */
+func CheckPasswordHash(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
 }

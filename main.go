@@ -34,9 +34,10 @@ func main() {
 	authorized.PUT("api/user/:username/bio", src.ChangeBioWrapper(db))
 	authorized.PUT("api/user/:username/pfp", src.ChangePfpWrapper(db))
 	authorized.POST("api/post", src.CreatePostWrapper(db))
-//	authorized.PUT("api/post/:id/comment", src.CreatePostWrapper(db))
-//	authorized.PUT("api/post/:id/like", src.CreatePostWrapper(db))
-//	authorized.GET("api/post", src.GetPostWrapper(db))
+	authorized.GET("api/post", src.GetPostsWrapper(db))
+	authorized.POST("api/post/:id/comment", src.CommentWrapper(db))
+	// authorized.PUT("api/post/:id/like", src.LikeWrapper(db))
+	// authorized.GET("api/post/:id/like", src.GetLikeWrapper(db))
 
 	//unauthorized endpoints (anyone can call)
 	router.POST("api/signup", src.CreateUserWrapper(db))

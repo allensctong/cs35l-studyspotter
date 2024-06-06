@@ -12,7 +12,7 @@ const App = () => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
   useEffect(() => {
-    fetch('/posts.json')
+    fetch('http://localhost:8080/api/post', {credentials: 'include',})
       .then(response => response.json())
       .then(data => setPosts(data))
       .catch(error => console.error('Error fetching posts:', error));
@@ -60,7 +60,11 @@ const App = () => {
 
   const commentPost = (index) => {
     const comment = prompt('Enter your comment:');
-    const username = 'Guest';
+    const username = posts[index].username;
+    fetch('http://localhost:8080/api/post/' + posts[index].post_id + '/comment', {
+      credentials: 'include',
+    })
+    
     if (comment) {
       const newPosts = [...posts];
       newPosts[index].comments.push({ username, comment });
@@ -116,7 +120,7 @@ const App = () => {
       <div className="content">
         {posts.map((post, index) => (
           <div className="post" key={index}>
-            <div className="uploader">{post.user}</div>
+            <div className="uploader">{post.username}</div>
             <img src={post.image_src} alt="Post" />
             <div className="buttons">
               <button onClick={() => likePost(index)}>

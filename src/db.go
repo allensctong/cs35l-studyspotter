@@ -91,7 +91,7 @@ func DBGetUserProfile(db *sql.DB, username string) schemas.UserProfile {
 
 	//get images for posts
 	user.Posts = []string{}
-	imageRows, err := db.Query("SELECT imagePath FROM post WHERE username=?", user.Username)
+	imageRows, err := db.Query("SELECT imagepath FROM post WHERE username=? ORDER BY uploadtime DESC", user.Username)
 	defer imageRows.Close()
 	for imageRows.Next() {
 		var post string
@@ -143,4 +143,48 @@ func DBCreatePost(db *sql.DB, post schemas.Post) bool {
 	}
 
 	return true
+}
+
+func DBGetPost(db *sql.DB, id int) schemas.Post {
+	var post schemas.Post
+	post.ID = id
+	//get info from main posttable
+	err := db.QueryRow("SELECT username, imagepath, caption FROM post WHERE id=?;", id).Scan(&post.Username, &post.ImagePath, &post.Caption)
+	if err != nil {
+		panic(err)
+	}
+
+	
+	err = db.QueryRow(fmt.Sprintf("SELECT COUNT(*) FROM likes%d;", post.ID)).Scan(&post.LikeCount)
+	likeRows, err := db.Query(fmt.Sprintf("SELECT username FROM likes%d", post.ID))
+	if err != nil {
+		panic(err)
+	}
+	defer likeRows.Close()
+	post.LikedUserList = []string{}
+	for likeRows.Next() {
+		var liker string
+		likeRows.Scan(&liker)
+		post.LikedUserList = append(post.LikedUserList, liker)
+	}
+	if likeRows.Err(); err != nil{
+		panic(err)
+	}
+
+	rows, err := db.Query(fmt.Sprintf("SELECT username, comment FROM comment%d ORDER BY commenttime DESC", post.ID))
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+	post.Comments = []schemas.Comment{}
+	for rows.Next() {
+		var comment schemas.Comment
+		rows.Scan(&comment.Username, &comment.Text)
+		post.Comments = append(post.Comments, comment)
+	}
+	if rows.Err(); err != nil{
+		panic(err)
+	}
+
+	return post
 }
