@@ -1,7 +1,7 @@
 package schemas
 
 import (
-	"time"
+//	"time"
 )
 
 //POST/GET FOR SIGNUP/LOGIN
@@ -26,22 +26,19 @@ type UploadPfp struct {
 //GET FROM MAIN/USER PAGE
 type Post struct {
 	Username string `json:"username"`
-	//Image 
+	ImageSrc string `json:"image_src"` 
 	Caption string `json:"caption"`
 	//Comments # a dictionary or a similar structure with usernames as keys and their corresponding comments as values 
 	LikeCount int `json:"like_count"`
 	LikeByUser bool `json:"liked_by_user"`
 	LikedUserList []string `json:"liked_by_user"`
-	UploadTime time.Time `json:"uploadtime"`
 }
 
 //GET FROM USER PAGE
 type UserProfile struct {
 	Username string `json:"username"`
-	IsUsername bool   `json:"isusername"`
 	Bio string `json:"bio"`
-	Following int `json:"following"`
-	Followers int `json:"followers"`
-	//ProfilePicture
-	//Posts []Post `json: "posts"`
+	FollowingCount int `json:"following_count"`
+	FollowersCount int `json:"followers_count"`
+	ProfilePicture string `json:"pfp"`
 }

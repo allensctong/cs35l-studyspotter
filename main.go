@@ -21,21 +21,26 @@ func main() {
 	defer db.Close()
 
 	src.DbInit(db)
-	token, _ := src.CreateToken("uwu")
-	fmt.Printf("%s\n", token)
 
 	// Set up router.
 	router := gin.Default()
 	// Set up CORS
 	router.Use(src.CORSMiddleware())
-	router.Static("/assets", "./assets")
 
+	//authorized endpoints (MUST BE SIGNED IN TO ACCESS)
 	authorized := router.Group("/", src.AuthRequired)
 	authorized.GET("api/user/:username", src.GetUserWrapper(db))
-	authorized.PUT("api/user/:username/bio", )
-	authorized.PUT("api/user/:username/pfp", )
+//	authorized.GET("api/user/:username/search", src.TODO(db))
+//	authorized.PUT("api/user/:username/bio", TODO)
+//	authorized.PUT("api/user/:username/pfp", TODO)
+	authorized.POST("api/post", src.CreatePostWrapper(db))
+//	authorized.GET("api/post", src.GetPostWrapper(db))
+
+	//unauthorized endpoints (anyone can call)
 	router.POST("api/signup", src.CreateUserWrapper(db))
 	router.POST("api/login", src.LoginWrapper(db))
-	router.POST("api/post", src.PostWrapper(db))
+	router.Static("/assets", "./assets")
+
+	//start router
 	router.Run("localhost:8080")
 }

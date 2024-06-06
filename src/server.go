@@ -2,9 +2,10 @@ package src
 
 import (
 	"fmt"
-	"log"
+	"strconv"
 	"net/http"
 	"database/sql"
+	"path/filepath"
 
 	"studyspotter/schemas"
 	"github.com/gin-gonic/gin"
@@ -24,7 +25,6 @@ func GetUserWrapper(db *sql.DB) gin.HandlerFunc {
 		}
 
 		c.IndentedJSON(http.StatusNotFound, gin.H{"message": "user not found"})
-		
 	}
 
 	return GetUser
@@ -38,28 +38,16 @@ func CreateUserWrapper(db *sql.DB) gin.HandlerFunc {
 		if err := c.BindJSON(&user); err != nil {
 			panic(err)
 		}
-		username := user.Username
-		password := user.Password
-		//query database for user
-		if hasUser := DBHasUser(db, username); hasUser {
-			//if user already exists
-			c.JSON(http.StatusBadRequest, gin.H{"message": "user already exists!"})
+
+		//try to add user to database
+		if madeUser := DBCreateUserProfile(db, user); madeUser {
+			//if user successfully created
+			c.JSON(http.StatusCreated, gin.H{})
 			return
 		}
-
-		//hash password
-		hashBytes, err := bcrypt.GenerateFromPassword([]byte(password), 12)
-		if err != nil {
-			return
-		}
-
-		passwordHash := string(hashBytes)
-
-		//create new user
-		db.Exec(`INSERT INTO user (username, password, following, followers, bio) VALUES (?, ?, 0, 0, "");`, username, passwordHash)
 		
 		//send response back to client
-		c.IndentedJSON(http.StatusCreated, gin.H{})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "user already exists!"})
 	}
 
 	return CreateUser
@@ -99,26 +87,28 @@ func LoginWrapper(db *sql.DB) gin.HandlerFunc {
 	return Login
 }
 
-func PostWrapper(db *sql.DB) gin.HandlerFunc {
-	Post := func (c *gin.Context) {
-//		var incomingPost schemas.Post
-		file, err := c.FormFile("image")
+func CreatePostWrapper(db *sql.DB) gin.HandlerFunc {
+	createPost := func (c *gin.Context) {
+		var post schemas.Post
+		image, err := c.FormFile("image")
 		if err != nil {
 			panic(err)
 		}
-		fmt.Println(file.Filename)
-		caption, _ := c.GetPostForm("caption")
-		username, _ := c.GetPostForm("username")
-		fmt.Println(caption)
-		fmt.Println(username)
-
-		err = c.SaveUploadedFile(file, "assests/"+file.Filename)
+		post.Caption, _ := c.GetPostForm("caption")
+		post.Username, _ := c.GetPostForm("username")
+		//get current number of posts and save image to image directory
+		var postCount int
+		err = db.QueryRow("SELECT COUNT(*) FROM post").Scan(&postCount)
+		imagePath := "assets/" + strconv.Itoa(postCount) + filepath.Ext(file.Filename)
+		err = c.SaveUploadedFile(file, imagePath)
 		if err != nil {
+			fmt.Println(err)
 			c.JSON(http.StatusBadRequest, gin.H{"message": "error with upload"})
 		}
+
 		c.JSON(http.StatusOK, gin.H{})
 	}
-	return Post
+	return createPost
 }
 
 func CORSMiddleware() gin.HandlerFunc {
