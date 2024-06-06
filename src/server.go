@@ -12,6 +12,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+var assetsPath string = "http://localhost:8080/assets/" 
+
 //Get User Profile (GET FOR USER PAGE)
 func GetUserWrapper(db *sql.DB) gin.HandlerFunc {
 	GetUser := func (c *gin.Context) {
@@ -94,21 +96,46 @@ func CreatePostWrapper(db *sql.DB) gin.HandlerFunc {
 		if err != nil {
 			panic(err)
 		}
-		post.Caption, _ := c.GetPostForm("caption")
-		post.Username, _ := c.GetPostForm("username")
+		post.Caption, _ = c.GetPostForm("caption")
+		post.Username, _ = c.GetPostForm("username")
 		//get current number of posts and save image to image directory
 		var postCount int
 		err = db.QueryRow("SELECT COUNT(*) FROM post").Scan(&postCount)
-		imagePath := "assets/" + strconv.Itoa(postCount) + filepath.Ext(file.Filename)
-		err = c.SaveUploadedFile(file, imagePath)
+		imagePath := assetsPath + strconv.Itoa(postCount) + filepath.Ext(image.Filename)
+		err = c.SaveUploadedFile(image, imagePath)
 		if err != nil {
 			fmt.Println(err)
 			c.JSON(http.StatusBadRequest, gin.H{"message": "error with upload"})
 		}
+		post.ImagePath = imagePath
+		post.ID = postCount
+
+		//create Post
+		DBCreatePost(db, post)
 
 		c.JSON(http.StatusOK, gin.H{})
 	}
 	return createPost
+}
+
+func ChangePfpWrapper(db *sql.DB) gin.HandlerFunc {
+	changePfp := func (c *gin.Context) {
+		username, _ := c.GetPostForm("username")
+		newPfp, err := c.FormFile("image")
+		if err != nil {
+			panic(err)
+		}
+		pfpPath := assetsPath + "pfp" + username + filepath.Ext(newPfp.Filename)
+		err = c.SaveUploadedFile(newPfp, pfpPath)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"message": "error with upload"})
+		}
+		
+		db.Exec("UPDATE user SET pfp=? WHERE username=?;", pfpPath, username)
+		c.JSON(http.StatusOK, gin.H{})
+	}	
+
+	return changePfp
 }
 
 func CORSMiddleware() gin.HandlerFunc {

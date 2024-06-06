@@ -2,6 +2,7 @@ package src
 
 import (
 	"fmt"
+	"strconv"
 	"database/sql"
 	"studyspotter/schemas"
 	"golang.org/x/crypto/bcrypt"
@@ -18,8 +19,9 @@ func DbInit(db *sql.DB) {
 		);
 		DROP TABLE IF EXISTS post; 
 		CREATE TABLE post(
+			id INT NOT NULL UNIQUE,
 			username VARCHAR(255) NOT NULL,
-			image TEXT NOT NULL UNIQUE,
+			imagepath TEXT NOT NULL UNIQUE,
 			caption TEXT DEFAULT '',
 			uploadtime TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 		);`);
@@ -54,9 +56,36 @@ func DBGetPasswordHash(db *sql.DB, username string) string {
 
 func DBGetUserProfile(db *sql.DB, username string) schemas.UserProfile {
 	var user schemas.UserProfile
-	err := db.QueryRow("SELECT username, bio, following_count, followers_count, pfp FROM user WHERE username=?", username).Scan(&user.Username, &user.Bio, &user.FollowingCount, &user.FollowersCount, &user.ProfilePicture)
-
+	//get info from main usertable
+	err := db.QueryRow("SELECT username, bio, pfp FROM user WHERE username=?", username).Scan(&user.Username, &user.Bio, &user.ProfilePicture)
 	if err != nil {
+		panic(err)
+	}
+	
+	//get follower/following counts (TODO MAKE THIS A HELPER FUNC AND USE GOROUTINE)
+	err = db.QueryRow(fmt.Sprintf("SELECT COUNT(*) FROM %sfollowing", user.Username)).Scan(&user.FollowingCount)
+	followingRows, err := db.Query(fmt.Sprintf("SELECT username FROM %sfollowing", user.Username))
+	defer followingRows.Close()
+	user.Following = []string{}
+	for followingRows.Next() {
+		var followee string
+		followingRows.Scan(&followee)
+		user.Following = append(user.Following, followee)
+	}
+	if followingRows.Err(); err != nil{
+		panic(err)
+	}
+
+	err = db.QueryRow(fmt.Sprintf("SELECT COUNT(*) FROM %sfollowers", user.Username)).Scan(&user.FollowersCount)
+	rows, err := db.Query(fmt.Sprintf("SELECT username FROM %sfollowers", user.Username))
+	defer rows.Close()
+	user.Followers = []string{}
+	for rows.Next() {
+		var follower string
+		rows.Scan(&follower)
+		user.Followers = append(user.Followers, follower)
+	}
+	if rows.Err(); err != nil{
 		panic(err)
 	}
 
@@ -79,10 +108,23 @@ func DBCreateUserProfile(db *sql.DB, user schemas.Login) bool {
 		return false
 	}
 
-	_, err = db.Exec(fmt.Sprintf("CREATE TABLE %sfollowing (username VARCHAR(255));", user.Username))
-	_, err = db.Exec(fmt.Sprintf("CREATE TABLE %sfollowers (username VARCHAR(255));", user.Username))
+	_, err = db.Exec(fmt.Sprintf("CREATE TABLE following%s (username VARCHAR(255));", user.Username))
+	_, err = db.Exec(fmt.Sprintf("CREATE TABLE followers%s (username VARCHAR(255));", user.Username))
 	if err != nil {
 		fmt.Println(err)
+		return false
+	}
+
+	return true
+}
+
+func DBCreatePost(db *sql.DB, post schemas.Post) bool {
+	_, err := db.Exec(`INSERT INTO post (id, username, imagepath, caption) VALUES (?, ?);`, post.ID, post.Username, post.ImagePath, post.Caption)
+
+	_, err = db.Exec(fmt.Sprintf("CREATE TABLE comment%s (username VARCHAR(255) NOT NULL, comment TEXT DEFAULT '', commenttime TIMESTAMP DEFAULT CURRENT_);", strconv.Itoa(post.ID)))
+	_, err = db.Exec(fmt.Sprintf("CREATE TABLE likes%s (username VARCHAR(255));", strconv.Itoa(post.ID)))
+	if err != nil {
+		panic(err)
 		return false
 	}
 

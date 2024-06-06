@@ -32,7 +32,7 @@ func main() {
 	authorized.GET("api/user/:username", src.GetUserWrapper(db))
 //	authorized.GET("api/user/:username/search", src.TODO(db))
 //	authorized.PUT("api/user/:username/bio", TODO)
-//	authorized.PUT("api/user/:username/pfp", TODO)
+	authorized.PUT("api/user/:username/pfp", src.ChangePfpWrapper(db))
 	authorized.POST("api/post", src.CreatePostWrapper(db))
 //	authorized.GET("api/post", src.GetPostWrapper(db))
 

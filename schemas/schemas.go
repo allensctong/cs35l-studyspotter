@@ -25,10 +25,10 @@ type UploadPfp struct {
 
 //GET FROM MAIN/USER PAGE
 type Post struct {
+	ID int `json:"post_id"`
 	Username string `json:"username"`
-	ImageSrc string `json:"image_src"` 
+	ImagePath string `json:"image_src"` 
 	Caption string `json:"caption"`
-	//Comments # a dictionary or a similar structure with usernames as keys and their corresponding comments as values 
 	LikeCount int `json:"like_count"`
 	LikeByUser bool `json:"liked_by_user"`
 	LikedUserList []string `json:"liked_by_user"`
@@ -39,6 +39,8 @@ type UserProfile struct {
 	Username string `json:"username"`
 	Bio string `json:"bio"`
 	FollowingCount int `json:"following_count"`
+	Following []string `json:"following"`
 	FollowersCount int `json:"followers_count"`
+	Followers []string `json:"follower"`
 	ProfilePicture string `json:"pfp"`
 }
