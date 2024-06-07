@@ -43,7 +43,7 @@ func main() {
 	router.Use(src.CORSMiddleware())
 
 	//authorized endpoints (MUST BE SIGNED IN TO ACCESS)
-	authorized := router.Group("/")//, src.AuthRequired)
+	authorized := router.Group("/", src.AuthRequired)
 	authorized.GET("api/user/:username", src.GetUserWrapper(db))
 	authorized.GET("api/user/search/:query", src.SearchUsersWrapper(db))
 	authorized.PUT("api/user/:username/bio", src.ChangeBioWrapper(db))

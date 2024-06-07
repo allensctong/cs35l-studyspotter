@@ -20,7 +20,7 @@ const App = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
-  useEffect(() => {
+  useEffect(() => { 
     fetch('http://localhost:8080/api/post', { credentials: 'include' })
       .then(response => response.json())
       .then(data => setPosts(data))

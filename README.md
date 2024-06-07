@@ -1,3 +1,16 @@
+# Study Spotter
+
+35L Final Project group: Emacs Enthusiasts
+
+## Group Member Email Mapping
+
+Tony Jeon: tonysjeon@gmail.com
+Yuxin Bao: 104787687+c13752hz@users.noreply.github.com
+Raymond Shao: 44079695+RaymondShao777@users.noreply.github.com
+Allen Tong: allensctong@gmail.com
+Sky Wang: 88114746+WindskyVG@users.noreply.github.com
+Antara Chugh: antara.chugh15@gmail.com
+
 ## Installation
 
 1. Clone the repository to a local directory:
