@@ -17,7 +17,7 @@ Sky Wang: 88114746+WindskyVG@users.noreply.github.com
 Antara Chugh: antara.chugh15@gmail.com
 
 ## Installation
-
+### Frontend
 1. Clone the repository to a local directory:
     ```sh
     git clone https://github.com/allensctong/cs35l-studyspotter.git
@@ -36,6 +36,7 @@ Antara Chugh: antara.chugh15@gmail.com
     npx vite dev
     ```
 
+### Backend
 5. Install backend dependencies:
 Install Go based on your device: https://go.dev/doc/install
 Execute the following commands on another terminal:
@@ -47,3 +48,12 @@ Execute the following commands on another terminal:
     ```sh
     go run main.go
     ```
+
+### Database
+No set up is needed for the database, but use this if you ever need to reset the database:
+    ```sh
+    rm studyspotter.db
+    ```
+
+## Running the App
+Commands 4. and 6. need to be running for the app to work. The frontend will be hosted at [http://localhost:5173](http://localhost:5173/) and backend is at [http://localhost:8080](http://localhost:8080/).
