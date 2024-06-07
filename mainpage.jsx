@@ -85,7 +85,7 @@ const App = () => {
     const username = getCookieValue('Username');
 
     if (comment) {
-      const newPosts = [...posts];
+      const newPosts = JSON.parse(JSON.stringify([...posts]));
       let response = await fetch('http://localhost:8080/api/post/' + posts[index].post_id + '/comment', {
         credentials: 'include',
         method: 'POST',
@@ -100,9 +100,7 @@ const App = () => {
 
       let data = await response.json();
       newPosts[index].comments.push(data);
-      console.log(newPosts[index].comments);
       setPosts(newPosts);
-      
     }
   };
 
@@ -170,7 +168,7 @@ const App = () => {
               <div className="caption">{post.caption}</div>
               <div className="comments">
                 {post.comments.map((comment, idx) => (
-                  <div className="comment" key={idx}><strong>{comment.username}:</strong> {comment.comment}</div>
+                  <div className="comment" key={idx}><strong>{comment.Username}:</strong> {comment.Text}</div>
                 ))}
               </div>
             </div>
