@@ -23,8 +23,8 @@ type UploadPfp struct {
 	//ProfilePicture 
 }
 type Comment struct {
-	Username string `json: "username"`
-	Text string `json: "comment"`
+	Username string
+	Text string
 }
 
 //GET FROM MAIN/USER PAGE
@@ -46,6 +46,7 @@ type UserProfile struct {
 	Following []string `json:"following"`
 	FollowersCount int `json:"followers_count"`
 	Followers []string `json:"follower"`
+	IsFriend bool `json:"isFriend"`
 	ProfilePicture string `json:"pfp"`
 	Posts []string `json:"posts"`
 }

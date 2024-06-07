@@ -20,7 +20,7 @@ func main() {
 	}
 	defer db.Close()
 
-	src.DbInit(db)
+//	src.DbInit(db)
 
 	// Set up router.
 	router := gin.Default()
@@ -28,16 +28,17 @@ func main() {
 	router.Use(src.CORSMiddleware())
 
 	//authorized endpoints (MUST BE SIGNED IN TO ACCESS)
-	authorized := router.Group("/", src.AuthRequired)
+	authorized := router.Group("/")//, src.AuthRequired)
 	authorized.GET("api/user/:username", src.GetUserWrapper(db))
 	authorized.GET("api/user/search/:query", src.SearchUsersWrapper(db))
 	authorized.PUT("api/user/:username/bio", src.ChangeBioWrapper(db))
 	authorized.PUT("api/user/:username/pfp", src.ChangePfpWrapper(db))
+	authorized.PUT("api/user/:username/friend", src.AddFriendWrapper(db))
 	authorized.POST("api/post", src.CreatePostWrapper(db))
 	authorized.GET("api/post", src.GetPostsWrapper(db))
 	authorized.POST("api/post/:id/comment", src.CommentWrapper(db))
-	// authorized.PUT("api/post/:id/like", src.LikeWrapper(db))
-	// authorized.GET("api/post/:id/like", src.GetLikeWrapper(db))
+	authorized.PUT("api/post/:id/like", src.LikeWrapper(db))
+	authorized.GET("api/post/:id/like", src.GetLikeWrapper(db))
 
 	//unauthorized endpoints (anyone can call)
 	router.POST("api/signup", src.CreateUserWrapper(db))

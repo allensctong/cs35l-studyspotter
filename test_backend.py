@@ -37,7 +37,27 @@ def login(ID, password):
     )
     return test_login.cookies
 
-#get_users_by_id('test')
+def like():
+    body = {'username': 'uwu'}
+    test_post = requests.put(
+        "http://localhost:8080/api/post/2/like", 
+        json=body, 
+        headers={'Origin': ORIGIN}, cookies=cookies
+    )
+    print(test_post.text)
+
+def friend():
+    body = {'username': 'uwu'}
+    test_post = requests.put(
+        "http://localhost:8080/api/user/t1/friend", 
+        json=body, 
+        headers={'Origin': ORIGIN}, cookies=cookies
+    )
+    print(test_post.text)
+
+login('uwu', 'owo')
+friend()
+'''
 create_user('RS', '1239120')
 create_user('R', '1239120')
 create_user('S', '1239120')
@@ -46,7 +66,7 @@ create_user('uwu', 'owo')
 create_user('owo', '1239120')
 create_user('iwi', '1239120')
 create_user('QAQ', '1239120')
-get_users_by_id('RS')
+get_users_by_id('RS') '''
 '''get_users_by_id('RS')
 create_user('RS', '1239120')
 create_user('RS', '1239120')
