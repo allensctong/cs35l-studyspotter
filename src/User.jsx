@@ -47,11 +47,11 @@ function ProfilePage () {
       let response = await fetch('http://localhost:8080/api/user/' + username, {
         credentials: 'include',
       });
-      if (await response.status == 401) {
+      if (response.status == 401) {
         window.location.href = 'login';
         return;
       }
-      if (await response.status !== 200) {
+      if (response.status !== 200) {
         //TODO handle error
         alert('ERROR');
         return;
@@ -60,17 +60,32 @@ function ProfilePage () {
       setIsUser(username === curUser);
       
       response = await response.json();
-      setProfileBio(response.bio);
+      setProfileBio(response.bio); 
       setPfpSrc(response.pfp);
       setPostSrcs(response.posts);
       setIsUser(username === curUser);
-      setFollowerCount(response.followers);
-      setFollowingCount(response.following);
+      setIsFriend(response.isFriend)
+      setFollowerCount(response.followers_count);
+      setFollowingCount(response.following_count);
     }
 
-    const handleAddFriend = () => {
-        setIsFriend(!isFriend);
-        this.classList.add("hideButton"); // not display hide button
+    const handleAddFriend = async () => {
+        const username = getCookieValue('Username')
+        let response = await fetch('http://localhost:8080/api/user/' + profileName + '/friend', {
+            credentials: 'include',
+            method: 'PUT',
+            headers: {'content-type': 'application/json'},
+            body: JSON.stringify({'username': username}),
+        });
+
+        //check for follow errors
+        if (response.status !== 200) {
+            return;
+        }
+
+        let data = await response.json();
+        setIsFriend(data.isFriend);
+        setFollowerCount(data.followers);
     };
 
     const handleEditBio = () => {

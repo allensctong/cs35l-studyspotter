@@ -4,6 +4,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart, faComment, faUser, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faHeartEmpty } from '@fortawesome/free-regular-svg-icons';
 
+function getCookieValue(name) 
+    {
+      const regex = new RegExp(`(^| )${name}=([^;]+)`)
+      const match = document.cookie.match(regex)
+      if (match) {
+        return match[2]
+      }
+   }
+
 const App = () => {
   const [posts, setPosts] = useState([]);
   const [users, setUsers] = useState([]);
@@ -49,29 +58,51 @@ const App = () => {
     }
   };
 
-  const likePost = (index) => {
-    const newPosts = [...posts];
-    if (newPosts[index].liked) {
-      newPosts[index].likes -= 1;
-      newPosts[index].liked = false;
-    } else {
-      newPosts[index].likes += 1;
-      newPosts[index].liked = true;
+  const likePost = async (index) => {
+    const username = getCookieValue('Username')
+    let response = await fetch('http://localhost:8080/api/post/' + posts[index].post_id + '/like', {
+        credentials: 'include',
+        method: 'PUT',
+        headers: {'content-type': 'application/json'},
+        body: JSON.stringify({'username': username}),
+      });
+
+    //check for like errors
+    if (response.status !== 200) {
+      return;
     }
+
+    let data = await response.json();
+    const newPosts = [...posts];
+    newPosts[index].liked = data.liked;
+    newPosts[index].likes = data.likes;
+
     setPosts(newPosts);
   };
 
-  const commentPost = (index) => {
+  const commentPost = async (index) => {
     const comment = prompt('Enter your comment:');
-    const username = posts[index].username;
-    fetch('http://localhost:8080/api/post/' + posts[index].post_id + '/comment', {
-      credentials: 'include',
-    });
+    const username = getCookieValue('Username');
 
     if (comment) {
       const newPosts = [...posts];
-      newPosts[index].comments.push({ username, comment });
+      let response = await fetch('http://localhost:8080/api/post/' + posts[index].post_id + '/comment', {
+        credentials: 'include',
+        method: 'POST',
+        headers: {'content-type': 'application/json'},
+        body: JSON.stringify({ 'Username': username, 'Text': comment}),
+      });
+
+      if (response.status !== 200) {
+        alert("error with comment!");
+        return;
+      }
+
+      let data = await response.json();
+      newPosts[index].comments.push(data);
+      console.log(newPosts[index].comments);
       setPosts(newPosts);
+      
     }
   };
 
