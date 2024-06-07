@@ -12,29 +12,32 @@ const App = () => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
   useEffect(() => {
-    fetch('http://localhost:8080/api/post', {credentials: 'include',})
+    fetch('http://localhost:8080/api/post', { credentials: 'include' })
       .then(response => response.json())
       .then(data => setPosts(data))
       .catch(error => console.error('Error fetching posts:', error));
-    }, []);
+  }, []);
 
-  const handleSearch = (e) => {
-    const query = e.target.value;
-    setSearchQuery(query);
-
-    if (query.length > 0) {
-      fetch('http://localhost:8080/api/user/search/' + query, {
+  useEffect(() => {
+    if (searchQuery.length > 0) {
+      fetch('http://localhost:8080/api/user/search/' + searchQuery, {
         credentials: 'include',
       })
         .then(response => response.json())
-        .then(data => setUsers(data))
+        .then(data => {
+          setUsers(data);
+          setSearchResults(data);
+          setIsDropdownVisible(true);
+        })
         .catch(error => console.error('Error fetching users:', error));
-      setSearchResults(users);
-      setIsDropdownVisible(true);
     } else {
       setSearchResults([]);
       setIsDropdownVisible(false);
     }
+  }, [searchQuery]);
+
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
   };
 
   const handleSearchSubmit = (e) => {
@@ -63,8 +66,8 @@ const App = () => {
     const username = posts[index].username;
     fetch('http://localhost:8080/api/post/' + posts[index].post_id + '/comment', {
       credentials: 'include',
-    })
-    
+    });
+
     if (comment) {
       const newPosts = [...posts];
       newPosts[index].comments.push({ username, comment });
@@ -98,10 +101,10 @@ const App = () => {
           {isDropdownVisible && searchResults.length > 0 && (
             <div className="search-results">
               {searchResults.map((user, index) => (
-                <a href={`http://localhost:5173/user?u=${user.username}`}  key={index}>
+                <a href={`http://localhost:5173/user?u=${user.username}`} key={index} style={{ textDecoration: 'none' }}>
                   <div className="search-result-item">
                     <img src={user.pfp} alt={`${user.username}'s profile`} className="profile-picture" />
-                    <span style={{ color: 'black' }}>{user.username}</span>
+                    <span className="username">{user.username}</span>
                   </div>
                 </a>
               ))}
@@ -118,26 +121,30 @@ const App = () => {
         </div>
       </div>
       <div className="content">
-        {posts.map((post, index) => (
-          <div className="post" key={index}>
-            <div className="uploader">{post.username}</div>
-            <img src={post.image_src} alt="Post" />
-            <div className="buttons">
-              <button onClick={() => likePost(index)}>
-                <FontAwesomeIcon icon={post.liked ? faHeart : faHeartEmpty} /> Like <span className="like-count">{post.likes}</span>
-              </button>
-              <button onClick={() => commentPost(index)}>
-                <FontAwesomeIcon icon={faComment} /> Comment
-              </button>
+        {posts.length === 0 ? (
+          <div style={{ fontSize: '24px'}}>No posts yet.</div>
+        ) : (
+          posts.map((post, index) => (
+            <div className="post" key={index}>
+              <div className="uploader">{post.username}</div>
+              <img src={post.image_src} alt="Post" />
+              <div className="buttons">
+                <button onClick={() => likePost(index)}>
+                  <FontAwesomeIcon icon={post.liked ? faHeart : faHeartEmpty} /> Like <span className="like-count">{post.likes}</span>
+                </button>
+                <button onClick={() => commentPost(index)}>
+                  <FontAwesomeIcon icon={faComment} /> Comment
+                </button>
+              </div>
+              <div className="caption">{post.caption}</div>
+              <div className="comments">
+                {post.comments.map((comment, idx) => (
+                  <div className="comment" key={idx}><strong>{comment.username}:</strong> {comment.comment}</div>
+                ))}
+              </div>
             </div>
-            <div className="caption">{post.caption}</div>
-            <div className="comments">
-              {post.comments.map((comment, idx) => (
-                <div className="comment" key={idx}><strong>{comment.username}:</strong> {comment.comment}</div>
-              ))}
-            </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );
