@@ -1,0 +1,244 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #fafafa;
+}
+
+.top-bar {
+    width: 100%;
+    height: 100%;
+    padding: 5px 0;
+    background-color: #001e3b;
+    text-align: center;
+}
+
+.logo-link {
+    display: inline-block;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.logo {
+    height: 125px;
+    display: block;
+}
+
+.profile-container {
+    width: 935px;
+    padding: 30px 20px;
+    background: #fff;
+    border: 1px solid #dbdbdb;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    margin: 20px auto;
+    border-radius: 15px; /* Rounder borders for profile container */
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #dbdbdb;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px; /* Rounder borders for profile header */
+}
+
+.button-unfriend {
+    background: #ccc;
+    color: #000;
+    border-radius: 10px; /* Rounder borders for unfriend button */
+}
+
+.profile-picture {
+    width: 250px;
+    height: 250px;
+    object-fit: cover;
+    background: gray;
+    border-radius: 50%; /* Profile pictures are already round */
+    margin-right: 20px;
+    position: relative;
+}
+
+.edit-profile-link {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    background: white;
+    padding: 5px;
+    border-radius: 50%; /* Rounder borders for edit profile link */
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    text-decoration: none;
+}
+
+    .edit-profile-link:hover {
+        background: #f1f1f1;
+    }
+
+.pencil-icon {
+    width: 24px;
+    height: 24px;
+}
+
+.profile-info h1 {
+    margin: 0;
+    font-size: 36px;
+}
+
+.profile-info p {
+    margin: 4px 0;
+    color: #999;
+    font-size: 20px;
+}
+
+button {
+    background: #0095f6;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 10px; /* Rounder borders for buttons */
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 18px;
+    margin-top: 10px;
+}
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+    margin-top: 20px;
+}
+
+.no-posts-text {
+    font-size: 30px;
+    text-align: center;
+    width: 100%;
+    margin-top: 30px;
+    font-weight: bold;
+}
+
+.photo {
+    background: #eee;
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%; /* Maintain aspect ratio */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 10px; /* Rounder borders for photos */
+}
+
+    .photo img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Maintain aspect ratio and fit inside the grid cell */
+        border-radius: 10px; /* Rounder borders for photo images */
+    }
+
+.add-photo {
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%; /* Maintain aspect ratio */
+    border-radius: 10px; /* Rounder borders for add photo */
+}
+
+.add-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 48px;
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-decoration: none;
+    transition: color 0.3s, transform 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%; /* Rounder borders for add button */
+}
+
+    .add-button:hover {
+        color: white;
+        transform: translate(-50%, -50%) scale(1.3);
+    }
+
+.hideButton {
+    display: none;
+}
+
+.add-friend {
+    background: #0095f6;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 10px; /* Rounder borders for add friend button */
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 18px;
+    margin-top: 10px;
+}
+
+.unadd-friend {
+    background: grey;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 10px; /* Rounder borders for unadd friend button */
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 18px;
+    margin-top: 10px;
+}
+
+.modal {
+    display: block;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    border-radius: 20px; /* Rounder borders for modal content */
+    text-align: center;
+}
+
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+    .close-button:hover,
+    .close-button:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
