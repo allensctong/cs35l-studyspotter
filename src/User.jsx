@@ -139,6 +139,9 @@ function ProfilePage () {
                         )}
                     </div>
                 </div>
+                {!isUser && (postSrcs.length === 0) && ( 
+                        <p className = "no-posts-text">No Posts Yet</p>
+                )}     
                 <div className="gallery">
                     {isUser && (
                         <div className="photo add-photo">
