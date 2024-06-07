@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"errors"
 	"database/sql"
 	
 	_ "modernc.org/sqlite"
@@ -11,8 +13,18 @@ import (
 )
 
 func main() {
+	//this is not ideal but i didnt have time to implement a proper secret manager
+	src.GenerateKey()
+	
 	// Set up database.
 	dbName := "studyspotter.db"
+
+	//check if init is needed
+	init := false
+	_, err := os.OpenFile(dbName, os.O_WRONLY, 0444)
+	if errors.Is(err, os.ErrNotExist) {
+		init = true
+	}
 	db, err := sql.Open("sqlite", dbName)
 	if err != nil {
 		fmt.Printf("Unable to use data source: %s", err)
@@ -20,7 +32,10 @@ func main() {
 	}
 	defer db.Close()
 
-//	src.DbInit(db)
+	if init {
+		fmt.Println("DB set up!")
+		src.DbInit(db)
+	}
 
 	// Set up router.
 	router := gin.Default()

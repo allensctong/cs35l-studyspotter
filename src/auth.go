@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"time"
+	"math/rand"
 //	"crypto/rsa"
 //	"crypto/x509"
 //	"encoding/pem"
@@ -51,11 +52,12 @@ func LoadPrivKey(rsaPrivateKeyLocation, rsaPublicKeyLocation string) (*rsa.Priva
 	return privateKey, nil
 }*/
 
-var pwd, _ = os.Getwd()
-var secretKey, _ = ioutil.ReadFile(pwd + "/jwtHS256.key")
+
+
 
 func CreateToken(username string) (string, error) {
-
+	var pwd, _ = os.Getwd()
+	var secretKey, _ = ioutil.ReadFile(pwd + "/jwtHS256.key")
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, 
 		jwt.MapClaims{
 			"username": username,
@@ -71,6 +73,8 @@ func CreateToken(username string) (string, error) {
 }
 
 func VerifyToken(tokenString string) (string, error) {
+	var pwd, _ = os.Getwd()
+	var secretKey, _ = ioutil.ReadFile(pwd + "/jwtHS256.key")
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		return secretKey, nil
 	})
@@ -84,4 +88,17 @@ func VerifyToken(tokenString string) (string, error) {
 	}
 	tokenString = token.Raw
 	return tokenString, nil
+}
+
+func GenerateKey () {
+	var pwd, _ = os.Getwd()
+	b := make([]byte, 32)
+    if _, err := rand.Read(b); err != nil {
+		panic(err)
+        return
+    }
+	err := os.WriteFile(pwd + "/jwtHS256.key", b, 0333)
+	if err != nil {
+		panic(err)
+	}
 }

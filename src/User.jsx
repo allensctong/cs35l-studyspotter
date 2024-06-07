@@ -59,7 +59,7 @@ function ProfilePage () {
       setIsUser(username === curUser);
       
       response = await response.json();
-      setProfileBio(response.bio);
+      setProfileBio(response.bio); 
       setPfpSrc(response.pfp);
       setPostSrcs(response.posts);
       setIsUser(username === curUser);
