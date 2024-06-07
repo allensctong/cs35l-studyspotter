@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './User.css';
 
-function getCookieValue(name) 
+function getCookieValue(name)
     {
       const regex = new RegExp(`(^| )${name}=([^;]+)`)
       const match = document.cookie.match(regex)
@@ -10,12 +10,12 @@ function getCookieValue(name)
       }
    }
 
-// we can see what the backend db is storing, but we should pass the loggedIn user ids, profile id, etc. in here 
+// we can see what the backend db is storing, but we should pass the loggedIn user ids, profile id, etc. in here
 function ProfilePage () {
     const [followerCount, setFollowerCount] = useState(0);
     const [followingCount, setFollowingCount] = useState(0);
     const [isFriend, setIsFriend] = useState(false);
-    const [isUser, setIsUser] = useState(true); 
+    const [isUser, setIsUser] = useState(true);
     const [profileName, setProfileName] = useState('');
     const [profileBio, setProfileBio] = useState('');
     const [pfpSrc, setPfpSrc] = useState("http://localhost:8080/assets/default-pfp.jpg");
@@ -23,14 +23,14 @@ function ProfilePage () {
     const [isEditingBio, setIsEditingBio] = useState(false);
     const [newBio, setNewBio] = useState('');
     const params = new URL(window.location.href).searchParams;
-    
+
     //call the first time the page is rendered
     useEffect(() => {
       let ignore = false;
       if (!ignore) { getUserInfo(); }
       return () => { ignore = true; };
     }, []);
-    
+
     async function getUserInfo() {
       //if input is default get username from cookie
       const curUser = getCookieValue('Username');
@@ -42,7 +42,7 @@ function ProfilePage () {
         setProfileName(username);
       }
       setIsUser(username === curUser);
-      
+
       //fetch profile info
       let response = await fetch('http://localhost:8080/api/user/' + username, {
         credentials: 'include',
@@ -58,9 +58,9 @@ function ProfilePage () {
       }
 
       setIsUser(username === curUser);
-      
+
       response = await response.json();
-      setProfileBio(response.bio); 
+      setProfileBio(response.bio);
       setPfpSrc(response.pfp);
       setPostSrcs(response.posts);
       setIsUser(username === curUser);
@@ -106,7 +106,7 @@ function ProfilePage () {
             },
             body: JSON.stringify({ 'bio': newBio }),
         });
-        
+
         if (await response.status === 200) {
             setProfileBio(newBio);
             setIsEditingBio(false);
@@ -144,7 +144,7 @@ function ProfilePage () {
                             <span id="following-count"> Following: {followingCount}</span>
                         </div>
                         {!isUser && (
-                            <button id="friend-button" 
+                            <button id="friend-button"
                                 className={isFriend ? 'unadd-friend' : 'add-friend'}
                                 onClick={handleAddFriend}>
                                 {isFriend ? 'Unadd Friend' : 'Add Friend'}
@@ -155,9 +155,9 @@ function ProfilePage () {
                         )}
                     </div>
                 </div>
-                {!isUser && (postSrcs.length === 0) && ( 
+                {!isUser && (postSrcs.length === 0) && (
                         <p className = "no-posts-text">No Posts Yet</p>
-                )}     
+                )}
                 <div className="gallery">
                     {isUser && (
                         <div className="photo add-photo">
@@ -165,7 +165,9 @@ function ProfilePage () {
                         </div>
                     )}
                     {postSrcs.map((element, index) => (
-                        <img className="photo" src={element} key={index}/>
+                      <div className="photo" key={index}>
+                        <img src={element} alt={`Post ${index}`} />
+                      </div>
                     ))}
                 </div>
             </div>
@@ -174,12 +176,12 @@ function ProfilePage () {
                     <div className="modal-content">
                         <span className="close-button" onClick={handleCloseModal}>&times;</span>
                         <h2>Edit Bio</h2>
-                        <textarea 
-                            value={newBio} 
-                            onChange={handleBioChange} 
-                            rows="4" 
+                        <textarea
+                            value={newBio}
+                            onChange={handleBioChange}
+                            rows="4"
                             cols="50"
-                        /> 
+                        />
                         <button onClick={handleSubmitBio}>Submit</button>
                     </div>
                 </div>
