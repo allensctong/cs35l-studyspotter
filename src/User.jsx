@@ -41,6 +41,7 @@ function ProfilePage () {
       } else {
         setProfileName(username);
       }
+      setIsUser(username === curUser);
       
       //fetch profile info
       let response = await fetch('http://localhost:8080/api/user/' + username, {

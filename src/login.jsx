@@ -56,7 +56,7 @@ function Login() {
 		window.location.href = 'http://localhost:5173/main';
 	}
 
-	async function handleSignup() {
+	async function handleSignup() { //redirect after account created, back to login after create account
 		if (username==='' || password==='' || verifyPassword==='') {
 			alert("Username or password not enetered!");
 		}
@@ -99,8 +99,10 @@ function Login() {
 			alert("Sign up Failed!");
 			return;
 		} else {
-			alert("Account created!");
-			return;
+			alert("Account created! Press OK to redirect to login page in 3 seconds...");
+            setTimeout(() => {
+                window.location.href = 'http://localhost:5173/login';
+            }, 3000);
 		}
 	}
 
