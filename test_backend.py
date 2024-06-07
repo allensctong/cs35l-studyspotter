@@ -55,18 +55,15 @@ def friend():
     )
     print(test_post.text)
 
-login('uwu', 'owo')
-friend()
-'''
-create_user('RS', '1239120')
-create_user('R', '1239120')
-create_user('S', '1239120')
-create_user('RSA', '1239120')
-create_user('uwu', 'owo')
-create_user('owo', '1239120')
-create_user('iwi', '1239120')
-create_user('QAQ', '1239120')
-get_users_by_id('RS') '''
+
+create_user('galint', 'Pass1234!')
+create_user('silverberrytreestump', 'Pass1234!')
+create_user('catboys_jeong', 'Pass1234!')
+create_user('YAHOOOOO', 'Pass1234!')
+create_user('uwuowo', 'Pass1234!')
+create_user('owouwu', 'Pass1234!')
+create_user('iwi0w0', 'Pass1234!')
+create_user('QAQQAQ', 'Pass1234!')
 '''get_users_by_id('RS')
 create_user('RS', '1239120')
 create_user('RS', '1239120')

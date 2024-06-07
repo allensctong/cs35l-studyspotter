@@ -181,7 +181,7 @@ function ProfilePage () {
                             onChange={handleBioChange}
                             rows="4"
                             cols="50"
-                        />
+                        /> <br />
                         <button onClick={handleSubmitBio}>Submit</button>
                     </div>
                 </div>

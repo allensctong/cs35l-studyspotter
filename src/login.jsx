@@ -99,10 +99,8 @@ function Login() {
 			alert("Sign up Failed!");
 			return;
 		} else {
-			alert("Account created! Press OK to redirect to login page in 3 seconds...");
-            setTimeout(() => {
-                window.location.href = 'http://localhost:5173/login';
-            }, 3000);
+			alert("Account created!");
+			window.location.href = 'http://localhost:5173/login';
 		}
 	}
 

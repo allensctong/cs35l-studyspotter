@@ -34,6 +34,7 @@ type Post struct {
 	ImagePath string `json:"image_src"` 
 	Caption string `json:"caption"`
 	LikeCount int `json:"likes"`
+	Liked bool `json:"liked"`
 	LikedUserList []string `json:"liked_users"`
 	Comments []Comment `json:"comments"`
 }

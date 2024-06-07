@@ -203,6 +203,7 @@ func SearchUsersWrapper(db *sql.DB) gin.HandlerFunc {
 func GetPostsWrapper(db *sql.DB) gin.HandlerFunc {
 	getPosts := func (c *gin.Context) {
 		ids := []int{}
+		username, _ := c.Cookie("Username")
 		rows, err := db.Query("SELECT id FROM post ORDER BY uploadtime DESC;")
 		if err != nil {
 			panic(err)
@@ -217,6 +218,15 @@ func GetPostsWrapper(db *sql.DB) gin.HandlerFunc {
 		posts := []schemas.Post{}
 		for _, id := range ids {
 			post := DBGetPost(db, id)
+			var liked bool
+			var u string
+			err := db.QueryRow(fmt.Sprintf("SELECT username FROM likes%d WHERE username=?", id), username).Scan(&u)
+			if err == sql.ErrNoRows{
+				liked = false
+			} else {
+				liked = true
+			}
+			post.Liked = liked
 			posts = append(posts, post)
 		}
 		c.JSON(http.StatusOK, posts)
