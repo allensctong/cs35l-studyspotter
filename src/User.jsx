@@ -143,8 +143,10 @@ function ProfilePage () {
                             <span id="following-count"> Following: {followingCount}</span>
                         </div>
                         {!isUser && (
-                            <button onClick={handleAddFriend}>
-                                {isFriend ? 'Unfriend' : 'Add Friend'}
+                            <button id="friend-button" 
+                                className={isFriend ? 'unadd-friend' : 'add-friend'}
+                                onClick={handleAddFriend}>
+                                {isFriend ? 'Unadd Friend' : 'Add Friend'}
                             </button>
                         )}
                         {isUser && (
@@ -152,6 +154,9 @@ function ProfilePage () {
                         )}
                     </div>
                 </div>
+                {!isUser && (postSrcs.length === 0) && ( 
+                        <p className = "no-posts-text">No Posts Yet</p>
+                )}     
                 <div className="gallery">
                     {isUser && (
                         <div className="photo add-photo">
