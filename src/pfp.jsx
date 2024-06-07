@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import './pfp.css'
+import { useRef} from 'react'
 
 function getCookieValue(name) 
     {
@@ -15,6 +16,12 @@ function Upload() {
   const [imageURL, setImageURL] = useState(null);
   const [error, setError] = useState('');
   const [profilePicture, setProfileImage]=useState(null);
+  const hiddenFileInput=useRef(null);
+
+  const handleClick = (Event)=>{
+    hiddenFileInput.current.click();
+  }
+
 
   const handleImageChange = (Event)=> {
     const file = Event.target.files[0];
@@ -30,7 +37,7 @@ function Upload() {
         setError('Invalid file type. Please upload an image file (.jpg, .jpeg, .png).');
       }
     }
-  };
+  }
 
   const handleUpload = async () => {
     if (selectedImage == null) {
@@ -55,22 +62,26 @@ function Upload() {
       }
       window.location.href = "../uploaded";
     }
-  };
+  }
  
   return (
     <>
       <div>
         <h1> Upload Profile Picture</h1>
         <h2>Add Image:</h2>
+        {imageURL ? ( <img src={imageURL}  alt="Selected" />)
+        :
         
-        <input type="file" accept=".jpg,.jpeg,.png" onChange={handleImageChange} />
-        {error && <p className="error-message">{error}</p>} <br />
-        {imageURL && <img src={imageURL} alt="Selected" className="uploaded-image" />}
-        {imageURL && <br />}
+        (<button className="add-button" onClick={handleClick}>Click to Add Your Image</button>)}
+        < input type="file" accept=".jpg,.jpeg,.png" onChange={handleImageChange} ref={hiddenFileInput} style={{display: 'none'}}/>
+        {error && <p className="error-message">{error}</p>}
+        
+        <div>
         <button className="setProfileButton" onClick={handleUpload}> Set as Profile Picture</button>
+        </div>
       </div>
     </>
-  )
+  );
 }
 
 export default Upload

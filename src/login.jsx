@@ -50,7 +50,7 @@ function Login() {
 		);
 
 		if(await response.status !== 200) {
-			alert("Login failed!");
+			alert("Login failed! Check if your username and password are correct.");
 			return;
     		}
 		window.location.href = 'http://localhost:5173/main';
@@ -96,7 +96,7 @@ function Login() {
 		);
 
 		if(await response.status !== 201) {
-			alert("Sign up Failed!");
+			alert("Sign up Failed! Did you already have an account?");
 			return;
 		} else {
 			alert("Account created!");
