@@ -16,7 +16,7 @@ body {
 .logo-link {
     display: inline-block;
     text-decoration: none;
-    cursor: pointer; 
+    cursor: pointer;
 }
 
 .logo {
@@ -116,12 +116,23 @@ button {
 }
 
 .photo {
+    background: #eee;
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%; /* Maintain aspect ratio */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.photo img {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    background: #eee;
-    padding-bottom: 100%;
-    position: relative;
+    object-fit: contain; /* Maintain aspect ratio and fit inside the grid cell */
 }
 
 .add-photo {
@@ -129,6 +140,9 @@ button {
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%; /* Maintain aspect ratio */
 }
 
 .add-button {
@@ -143,6 +157,9 @@ button {
     transform: translate(-50%, -50%);
     text-decoration: none;
     transition: color 0.3s, transform 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .add-button:hover {
