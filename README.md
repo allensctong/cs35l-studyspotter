@@ -50,7 +50,7 @@ Execute the following commands on another terminal:
     ```
 
 ### Database
-No set up is needed for the database, but use this if you ever need to reset the database:
+1. No set up is needed for the database, but use this if you ever need to reset the database:
     ```sh
     rm studyspotter.db
     ```
