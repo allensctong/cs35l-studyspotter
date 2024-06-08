@@ -1,14 +1,30 @@
 import React from 'react'
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import ReactDOM from 'react-dom/client'
 import studySpotLogo from './assets/study-spotter.jpg'
 import './login.css'
+
+function getCookieValue(name)
+    {
+      const regex = new RegExp(`(^| )${name}=([^;]+)`)
+      const match = document.cookie.match(regex)
+      if (match) {
+        return match[2]
+      }
+   }
 
 function Login() {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [verifyPassword, setVerifyPassword] = useState('');
     const [isSigningUp, setIsSigningUp] = useState(false);
+
+	useEffect(() => {
+		if (getCookieValue('Username')) {
+		  window.location.href = 'main';
+		  return;
+		}
+	  }, []);
 
 	function handleChangeUsername(Event) {
 		setUsername(Event.target.value);

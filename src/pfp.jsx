@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './pfp.css'
 import { useRef} from 'react'
 
@@ -21,6 +21,13 @@ function Upload() {
   const handleClick = (Event)=>{
     hiddenFileInput.current.click();
   }
+
+  useEffect(() => {
+    if (!getCookieValue('Username')) {
+      window.location.href = 'login';
+      return;
+    }
+  }, []);
 
 
   const handleImageChange = (Event)=> {

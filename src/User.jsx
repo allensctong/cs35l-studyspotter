@@ -26,9 +26,13 @@ function ProfilePage () {
 
     //call the first time the page is rendered
     useEffect(() => {
-      let ignore = false;
-      if (!ignore) { getUserInfo(); }
-      return () => { ignore = true; };
+        if (!getCookieValue('Username')) {
+            window.location.href = 'login';
+            return;
+        }
+        let ignore = false;
+        if (!ignore) { getUserInfo(); }
+        return () => { ignore = true; };
     }, []);
 
     async function getUserInfo() {

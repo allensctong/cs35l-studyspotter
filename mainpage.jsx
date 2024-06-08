@@ -21,6 +21,11 @@ const App = () => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
   useEffect(() => { 
+    if (!getCookieValue('Username')) {
+		  window.location.href = 'login';
+		  return;
+		}
+
     fetch('http://localhost:8080/api/post', { credentials: 'include' })
       .then(response => response.json())
       .then(data => setPosts(data))

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRef} from 'react'
 import './Upload.css'
 
@@ -19,6 +19,13 @@ function Upload() {
   const [profilePicture, setProfileImage]=useState(null);
   const[postWidth, setPostWidth]=useState(0);
   const[postHeight, setPostHeight]=useState(0);
+
+  useEffect(() => {
+    if (!getCookieValue('Username')) {
+      window.location.href = 'login';
+      return;
+    }
+  }, []);
 
   const imgDimension={width: 1024/2, height:768/2 };
  
