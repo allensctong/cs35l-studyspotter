@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './src/main.css';
+import './main.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart, faComment, faUser, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faHeartEmpty } from '@fortawesome/free-regular-svg-icons';
