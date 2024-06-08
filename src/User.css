@@ -31,6 +31,7 @@ body {
     border: 1px solid #dbdbdb;
     box-shadow: 0 0 5px rgba(0,0,0,0.1);
     margin: 20px auto;
+    border-radius: 15px; /* Rounder borders for profile container */
 }
 
 .profile-header {
@@ -39,11 +40,13 @@ body {
     border-bottom: 1px solid #dbdbdb;
     padding-bottom: 20px;
     margin-bottom: 20px;
+    border-radius: 10px; /* Rounder borders for profile header */
 }
 
 .button-unfriend {
     background: #ccc;
     color: #000;
+    border-radius: 10px; /* Rounder borders for unfriend button */
 }
 
 .profile-picture {
@@ -51,7 +54,7 @@ body {
     height: 250px;
     object-fit: cover;
     background: gray;
-    border-radius: 50%;
+    border-radius: 50%; /* Profile pictures are already round */
     margin-right: 20px;
     position: relative;
 }
@@ -62,14 +65,14 @@ body {
     right: 0px;
     background: white;
     padding: 5px;
-    border-radius: 50%;
+    border-radius: 50%; /* Rounder borders for edit profile link */
     box-shadow: 0 0 5px rgba(0,0,0,0.1);
     text-decoration: none;
 }
 
-.edit-profile-link:hover {
-    background: #f1f1f1;
-}
+    .edit-profile-link:hover {
+        background: #f1f1f1;
+    }
 
 .pencil-icon {
     width: 24px;
@@ -92,7 +95,7 @@ button {
     color: white;
     border: none;
     padding: 10px 15px;
-    border-radius: 4px;
+    border-radius: 10px; /* Rounder borders for buttons */
     cursor: pointer;
     font-weight: bold;
     text-transform: uppercase;
@@ -124,16 +127,18 @@ button {
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    border-radius: 10px; /* Rounder borders for photos */
 }
 
-.photo img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Maintain aspect ratio and fit inside the grid cell */
-}
+    .photo img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Maintain aspect ratio and fit inside the grid cell */
+        border-radius: 10px; /* Rounder borders for photo images */
+    }
 
 .add-photo {
     background: #000;
@@ -143,6 +148,7 @@ button {
     position: relative;
     width: 100%;
     padding-bottom: 100%; /* Maintain aspect ratio */
+    border-radius: 10px; /* Rounder borders for add photo */
 }
 
 .add-button {
@@ -160,12 +166,13 @@ button {
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 50%; /* Rounder borders for add button */
 }
 
-.add-button:hover {
-    color: white;
-    transform: translate(-50%, -50%) scale(1.3);
-}
+    .add-button:hover {
+        color: white;
+        transform: translate(-50%, -50%) scale(1.3);
+    }
 
 .hideButton {
     display: none;
@@ -176,7 +183,7 @@ button {
     color: white;
     border: none;
     padding: 10px 15px;
-    border-radius: 4px;
+    border-radius: 10px; /* Rounder borders for add friend button */
     cursor: pointer;
     font-weight: bold;
     text-transform: uppercase;
@@ -189,7 +196,7 @@ button {
     color: white;
     border: none;
     padding: 10px 15px;
-    border-radius: 4px;
+    border-radius: 10px; /* Rounder borders for unadd friend button */
     cursor: pointer;
     font-weight: bold;
     text-transform: uppercase;
@@ -218,7 +225,7 @@ button {
     width: 80%;
     max-width: 500px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    border-radius: 10px;
+    border-radius: 20px; /* Rounder borders for modal content */
     text-align: center;
 }
 
@@ -229,9 +236,9 @@ button {
     font-weight: bold;
 }
 
-.close-button:hover,
-.close-button:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
+    .close-button:hover,
+    .close-button:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
